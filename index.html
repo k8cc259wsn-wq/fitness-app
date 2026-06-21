@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fitness Tracker iOS</title>
+    <title>Fitness Tracker iOS Titanium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -11,38 +11,63 @@
             --bg-black: #000000; --glass-bg: rgba(28, 28, 30, 0.65); --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff; --text-muted: rgba(255, 255, 255, 0.6);
             --apple-green: #32d74b; --apple-blue: #0a84ff; --apple-orange: #ff9f0a; --apple-purple: #bf5af2;
+            --apple-red: #ff453a;
         }
 
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 20px 20px 50px 20px; overflow-x: hidden; }
+        body { font-family: -apple-system, sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 20px 15px 50px 15px; overflow-x: hidden; }
 
         .ambient-orb-1 { position: fixed; top: -50px; left: -50px; width: 250px; height: 250px; background: var(--apple-blue); border-radius: 50%; filter: blur(100px); opacity: 0.35; z-index: -1; }
         .ambient-orb-2 { position: fixed; bottom: 50px; right: -50px; width: 300px; height: 300px; background: var(--apple-purple); border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: -1; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 25px 0; }
-        .header h1 { margin: 0; font-size: 28px; font-weight: 800; }
-        .streak { background: rgba(255, 159, 10, 0.15); border: 1px solid rgba(255, 159, 10, 0.3); padding: 8px 14px; border-radius: 20px; font-weight: 700; color: var(--apple-orange); backdrop-filter: blur(10px); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 20px 0; }
+        .header h1 { margin: 0; font-size: 26px; font-weight: 800; }
+        .streak { background: rgba(255, 159, 10, 0.15); border: 1px solid rgba(255, 159, 10, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; color: var(--apple-orange); backdrop-filter: blur(10px); }
 
-        .card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 22px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { margin-top: 0; font-size: 19px; font-weight: 700; margin-bottom: 15px; }
+        .card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 22px; padding: 18px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { margin-top: 0; font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
 
-        input[type="number"] { width: calc(100% - 30px); padding: 15px; border: 1px solid var(--glass-border); border-radius: 14px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 17px; margin-bottom: 15px; }
+        input[type="number"] { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 16px; margin-bottom: 10px; }
         input[type="number"]:focus { outline: none; border-color: var(--apple-blue); background: rgba(10, 132, 255, 0.1); }
+        
+        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
-        button { width: 100%; padding: 16px; background: linear-gradient(135deg, #32d74b 0%, #28a745 100%); color: white; border: none; border-radius: 14px; font-size: 17px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #32d74b 0%, #28a745 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         button:active { transform: scale(0.97); }
         button:disabled { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); cursor: not-allowed; transform: none; }
         .btn-blue { background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%); }
 
-        canvas { width: 100% !important; height: 220px !important; }
-        ul { padding-left: 20px; margin-bottom: 20px; color: var(--text-muted); line-height: 1.6; }
+        canvas { width: 100% !important; height: 180px !important; }
+        ul { padding-left: 20px; margin: 0 0 15px 0; color: var(--text-muted); line-height: 1.6; }
         li span { color: var(--text-main); font-weight: 500; }
 
-        /* Стили Календаря Активности */
-        .heatmap-container { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; }
-        .day-box { flex: 1; aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--text-muted); transition: 0.3s; }
-        .day-box.active { background: var(--apple-green); color: var(--bg-black); box-shadow: 0 0 15px rgba(50, 215, 75, 0.4); border: none; }
-        .cloud-status { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 5px;}
-        .cloud-status.sync { color: var(--apple-blue); }
+        /* Календарь */
+        .heatmap-container { display: flex; justify-content: space-between; gap: 6px; }
+        .day-box { flex: 1; aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: var(--text-muted); }
+        .day-box.active { background: var(--apple-green); color: var(--bg-black); box-shadow: 0 0 10px rgba(50, 215, 75, 0.4); border: none; }
+        
+        /* Таймер */
+        .timer-display { font-size: 42px; font-weight: 800; text-align: center; color: var(--apple-orange); font-variant-numeric: tabular-nums; margin: 5px 0; text-shadow: 0 0 15px rgba(255, 159, 10, 0.4); }
+        .timer-controls { display: flex; gap: 8px; margin-bottom: 15px; }
+        .timer-btn { background: rgba(255, 159, 10, 0.2); color: var(--apple-orange); padding: 8px; font-size: 13px; border-radius: 8px; flex: 1; text-align: center; font-weight: bold; border: 1px solid rgba(255, 159, 10, 0.3); }
+
+        /* Вода */
+        .water-container { display: flex; justify-content: space-between; margin-top: 5px; }
+        .water-drop { font-size: 24px; opacity: 0.3; transition: 0.3s; cursor: pointer; filter: grayscale(100%); }
+        .water-drop.filled { opacity: 1; filter: grayscale(0%); text-shadow: 0 0 10px rgba(10, 132, 255, 0.5); transform: scale(1.1); }
+
+        /* Макросы (Питание) */
+        .macro-box { margin-bottom: 12px; }
+        .macro-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        .macro-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .macro-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; width: 0%; }
+        
+        .c-cal { color: var(--apple-red); } .bg-cal { background: var(--apple-red); box-shadow: 0 0 8px var(--apple-red); }
+        .c-pro { color: var(--apple-green); } .bg-pro { background: var(--apple-green); box-shadow: 0 0 8px var(--apple-green); }
+        .c-fat { color: var(--apple-orange); } .bg-fat { background: var(--apple-orange); box-shadow: 0 0 8px var(--apple-orange); }
+        .c-crb { color: var(--apple-blue); } .bg-crb { background: var(--apple-blue); box-shadow: 0 0 8px var(--apple-blue); }
+
+        .cloud-status { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; }
+        .sync { color: var(--apple-blue); }
     </style>
 </head>
 <body>
@@ -51,29 +76,84 @@
     <div class="ambient-orb-2"></div>
 
     <div class="header">
-        <h1>Прогресс</h1>
+        <h1>Tracker PRO</h1>
         <div class="streak" id="streakDisplay">🔥 0</div>
     </div>
 
     <div class="card">
-        <h2>🗓 История тренировок</h2>
-        <div class="heatmap-container" id="heatmap">
+        <h2>🗓 Тренировки</h2>
+        <div class="heatmap-container" id="heatmap"></div>
+    </div>
+
+    <div class="card">
+        <h2>💧 Вода (Норма: 8 стаканов)</h2>
+        <div class="water-container" id="waterBox">
             </div>
     </div>
 
     <div class="card">
-        <h2>⚖️ Взвешивание</h2>
-        <input type="number" id="weightInput" placeholder="Текущий вес, кг" step="0.1">
-        <button id="weightBtn" class="btn-blue" onclick="saveWeight()">Записать вес</button>
+        <h2>🥩 Питание (Цели на рост)</h2>
+        <div class="input-row">
+            <input type="number" id="inpCal" placeholder="Ккал (2500)" inputmode="decimal">
+            <input type="number" id="inpPro" placeholder="Белок (130г)" inputmode="decimal">
+        </div>
+        <div class="input-row">
+            <input type="number" id="inpFat" placeholder="Жиры (80г)" inputmode="decimal">
+            <input type="number" id="inpCrb" placeholder="Угли (300г)" inputmode="decimal">
+        </div>
+        <button class="btn-blue" style="margin-bottom:15px; padding: 10px;" onclick="saveMacros()">Записать еду</button>
+        
+        <div class="macro-box">
+            <div class="macro-header c-cal"><span>Калории</span><span id="txtCal">0 / 2500</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar-fill bg-cal" id="barCal"></div></div>
+        </div>
+        <div class="macro-box">
+            <div class="macro-header c-pro"><span>Белок</span><span id="txtPro">0 / 130g</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar-fill bg-pro" id="barPro"></div></div>
+        </div>
+        <div class="macro-box">
+            <div class="macro-header c-fat"><span>Жиры</span><span id="txtFat">0 / 80g</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar-fill bg-fat" id="barFat"></div></div>
+        </div>
+        <div class="macro-box">
+            <div class="macro-header c-crb"><span>Углеводы</span><span id="txtCrb">0 / 300g</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar-fill bg-crb" id="barCrb"></div></div>
+        </div>
     </div>
 
     <div class="card">
-        <h2>📈 Набор массы (Цель: 75 кг)</h2>
+        <h2>⚖️ Вес (Цель: 75 кг)</h2>
+        <div class="input-row">
+            <input type="number" id="weightInput" placeholder="Текущий вес" step="0.1" inputmode="decimal">
+            <button id="weightBtn" class="btn-blue" style="width: 50%;" onclick="saveWeight()">Записать</button>
+        </div>
         <canvas id="weightChart"></canvas>
     </div>
 
     <div class="card">
-        <h2>💪 Умный план</h2>
+        <h2>📏 Замеры объемов (см)</h2>
+        <div class="input-row">
+            <input type="number" id="inpBicep" placeholder="Бицепс" inputmode="decimal">
+            <input type="number" id="inpChest" placeholder="Грудь" inputmode="decimal">
+            <input type="number" id="inpWaist" placeholder="Талия" inputmode="decimal">
+        </div>
+        <button class="btn-blue" style="padding: 10px;" onclick="saveMeasurements()">Сохранить замеры</button>
+    </div>
+
+    <div class="card">
+        <h2>⏱ Умный таймер</h2>
+        <div class="timer-display" id="timer">01:00</div>
+        <div class="timer-controls">
+            <div class="timer-btn" onclick="adjTimer(-15)">-15с</div>
+            <div class="timer-btn" onclick="adjTimer(15)">+15с</div>
+            <div class="timer-btn" onclick="setTimer(30)">30с</div>
+            <div class="timer-btn" onclick="setTimer(90)">90с</div>
+        </div>
+        <button onclick="startTimer()" style="background: linear-gradient(135deg, #ff9f0a 0%, #d88300 100%);">Старт</button>
+    </div>
+
+    <div class="card">
+        <h2>💪 Тренировка</h2>
         <ul id="workoutPlan"></ul>
         <button id="workoutBtn" onclick="completeWorkout()">Тренировка выполнена</button>
     </div>
@@ -88,165 +168,69 @@
         let todayStr = new Date().toDateString();
         function triggerVibration(style = 'medium') { if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(style); }
 
-        // Переменные состояния
-        let streak = 0;
-        let weightData = [61.0];
-        let weightLabels = ['Старт'];
-        let activityHistory = []; // Массив дат тренировок
+        // Глобальный объект данных (чтобы легко сохранять в облако)
+        let appData = {
+            streak: 0, weightData: [61.0], weightLabels: ['Старт'], activityHistory: [],
+            lastWeightDate: '', lastWorkoutDate: '', lastResetDate: '',
+            water: 0, macros: { cal: 0, pro: 0, fat: 0, crb: 0 },
+            meas: { bicep: '', chest: '', waist: '' }
+        };
 
-        // 1. Восстановление данных из Облака Telegram
+        // 1. Загрузка из Облака
         function loadFromCloud() {
-            tg.CloudStorage.getItem('fitness_pro_data', (err, val) => {
+            tg.CloudStorage.getItem('fit_pro_v6', (err, val) => {
                 if (!err && val) {
-                    let data = JSON.parse(val);
-                    streak = data.streak || 0;
-                    weightData = data.weightData || [61.0];
-                    weightLabels = data.weightLabels || ['Старт'];
-                    activityHistory = data.activityHistory || [];
-                    
-                    if(data.lastWeightDate) localStorage.setItem('lastWeightDate', data.lastWeightDate);
-                    if(data.lastWorkoutDate) localStorage.setItem('lastWorkoutDate', data.lastWorkoutDate);
-                    
-                    document.getElementById('cloudStatus').innerHTML = '☁️ Облако: синхронизировано';
-                } else {
-                    // Если облако пустое, берем локальные (первый запуск)
-                    streak = parseInt(localStorage.getItem('streak') || '0');
-                    weightData = JSON.parse(localStorage.getItem('weightData')) || [61.0];
-                    weightLabels = JSON.parse(localStorage.getItem('weightLabels')) || ['Старт'];
-                    activityHistory = JSON.parse(localStorage.getItem('activityHistory')) || [];
-                    document.getElementById('cloudStatus').innerHTML = '☁️ Облако: локальный режим';
+                    appData = JSON.parse(val);
                 }
+                
+                // Умный сброс (вода и еда сбрасываются на следующий день)
+                if (appData.lastResetDate !== todayStr) {
+                    appData.water = 0;
+                    appData.macros = { cal: 0, pro: 0, fat: 0, crb: 0 };
+                    appData.lastResetDate = todayStr;
+                    syncToCloud();
+                }
+                
+                document.getElementById('cloudStatus').innerHTML = '☁️ Данные загружены';
                 initUI();
             });
         }
 
         // 2. Бэкап в Облако
         function syncToCloud() {
-            document.getElementById('cloudStatus').innerHTML = '☁️ Облако: сохранение...';
+            document.getElementById('cloudStatus').innerHTML = '☁️ Сохранение...';
             document.getElementById('cloudStatus').classList.add('sync');
-            let dataToSave = {
-                streak: streak,
-                weightData: weightData,
-                weightLabels: weightLabels,
-                activityHistory: activityHistory,
-                lastWeightDate: localStorage.getItem('lastWeightDate'),
-                lastWorkoutDate: localStorage.getItem('lastWorkoutDate')
-            };
-            tg.CloudStorage.setItem('fitness_pro_data', JSON.stringify(dataToSave), (err, success) => {
+            tg.CloudStorage.setItem('fit_pro_v6', JSON.stringify(appData), (err, success) => {
                 if(success) {
-                    document.getElementById('cloudStatus').innerHTML = '☁️ Облако: сохранено ✔️';
+                    document.getElementById('cloudStatus').innerHTML = '☁️ Облако обновлено ✔️';
                     document.getElementById('cloudStatus').classList.remove('sync');
                 }
             });
-            // Локальный дубляж на всякий случай
-            localStorage.setItem('streak', streak.toString());
-            localStorage.setItem('weightData', JSON.stringify(weightData));
-            localStorage.setItem('weightLabels', JSON.stringify(weightLabels));
-            localStorage.setItem('activityHistory', JSON.stringify(activityHistory));
         }
 
         let chart;
         function initUI() {
-            document.getElementById('streakDisplay').innerText = `🔥 ${streak}`;
+            document.getElementById('streakDisplay').innerText = `🔥 ${appData.streak}`;
             renderHeatmap();
+            renderWater();
+            renderMacros();
             checkLocks();
+
+            // Восстановление замеров
+            document.getElementById('inpBicep').value = appData.meas.bicep;
+            document.getElementById('inpChest').value = appData.meas.chest;
+            document.getElementById('inpWaist').value = appData.meas.waist;
 
             // График
             const ctx = document.getElementById('weightChart').getContext('2d');
-            let gradient = ctx.createLinearGradient(0, 0, 0, 220);
+            let gradient = ctx.createLinearGradient(0, 0, 0, 180);
             gradient.addColorStop(0, 'rgba(10, 132, 255, 0.4)'); gradient.addColorStop(1, 'rgba(10, 132, 255, 0.0)');
             
             if(chart) chart.destroy();
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: weightLabels,
+                    labels: appData.weightLabels,
                     datasets: [
-                        { label: 'Вес', data: weightData, borderColor: '#0a84ff', backgroundColor: gradient, borderWidth: 3, pointBackgroundColor: '#fff', fill: true, tension: 0.4 },
-                        { label: 'Цель', data: Array(weightLabels.length).fill(75), borderColor: '#32d74b', borderDash: [6,6], borderWidth: 2, fill: false }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 60, max: 80 } } }
-            });
-
-            // План тренировок
-            let ul = document.getElementById('workoutPlan');
-            ul.innerHTML = '';
-            const bonusReps = Math.floor(streak / 7) * 2;
-            const workouts = [
-                [{n: "Отжимания от пола", sets: 4, reps: 12}, {n: "Скручивания", sets: 3, reps: 20}, {n: "Приседания", sets: 4, reps: 20}],
-                [{n: "Подтягивания / Тяга", sets: 4, reps: 8}, {n: "Отжимания узким", sets: 3, reps: 12}, {n: "Выпады", sets: 3, reps: 15}]
-            ];
-            let currentDayPlan = new Date().getDay() % 3;
-            if (currentDayPlan === 2) {
-                ul.innerHTML = "<li><span>День отдыха</span></li><li><span>Растяжка</span></li>";
-            } else {
-                workouts[currentDayPlan].forEach(ex => {
-                    let li = document.createElement('li');
-                    li.innerHTML = `<span>${ex.n}:</span> ${ex.sets}х${ex.reps + bonusReps}`;
-                    ul.appendChild(li);
-                });
-            }
-        }
-
-        // Рендер календаря (последние 7 дней)
-        function renderHeatmap() {
-            let container = document.getElementById('heatmap');
-            container.innerHTML = '';
-            for(let i = 6; i >= 0; i--) {
-                let d = new Date();
-                d.setDate(d.getDate() - i);
-                let dateString = d.toDateString();
-                
-                let box = document.createElement('div');
-                box.className = `day-box ${activityHistory.includes(dateString) ? 'active' : ''}`;
-                // Берем первую букву дня недели (напр. Пн, Вт)
-                let daysRu = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
-                box.innerText = daysRu[d.getDay()];
-                container.appendChild(box);
-            }
-        }
-
-        function checkLocks() {
-            if (localStorage.getItem('lastWeightDate') === todayStr) {
-                let wBtn = document.getElementById('weightBtn'); wBtn.disabled = true; wBtn.innerText = '✓ Выполнено сегодня';
-            }
-            if (localStorage.getItem('lastWorkoutDate') === todayStr) {
-                let woBtn = document.getElementById('workoutBtn'); woBtn.disabled = true; woBtn.innerText = '✓ Тренировка закрыта';
-            }
-        }
-
-        function saveWeight() {
-            let val = document.getElementById('weightInput').value;
-            if(!val) return;
-            triggerVibration('heavy');
-            
-            weightLabels.push(`${new Date().getDate()}.${new Date().getMonth()+1}`);
-            weightData.push(parseFloat(val));
-            if (weightLabels.length > 10) { weightLabels.shift(); weightData.shift(); }
-
-            localStorage.setItem('lastWeightDate', todayStr);
-            syncToCloud(); // Синхронизируем
-            initUI(); // Перерисовываем
-            tg.showAlert('Вес в облаке!');
-        }
-
-        function completeWorkout() {
-            triggerVibration('rigid');
-            streak++;
-            if(!activityHistory.includes(todayStr)) {
-                activityHistory.push(todayStr);
-            }
-            localStorage.setItem('lastWorkoutDate', todayStr);
-            
-            syncToCloud(); // Синхронизируем
-            initUI(); // Перерисовываем
-            tg.showAlert('Тренировка записана в облако!');
-        }
-
-        // Запуск!
-        loadFromCloud();
-
-    </script>
-</body>
-</html>
+                        { label: 'Вес', data: appData.weightData, borderColor: '#0a84ff', backgroundColor: gradient, borderWidth: 3, pointBackgroundColor: '#fff', fill: true, tension: 0.4 },
+                        { label: 'Цель', data: Array(appData.weightLabels.length).fill(75), borderColor: '#32d74b', borderDash:
