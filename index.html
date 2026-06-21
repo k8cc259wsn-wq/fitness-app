@@ -11,7 +11,7 @@
             --bg-black: #000000; --glass-bg: rgba(28, 28, 30, 0.65); --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff; --text-muted: rgba(255, 255, 255, 0.6);
             --apple-green: #32d74b; --apple-blue: #0a84ff; --apple-orange: #ff9f0a; --apple-purple: #bf5af2;
-            --apple-red: #ff453a;
+            --apple-red: #ff453a; --exp-color: #ffd60a;
         }
 
         body { font-family: -apple-system, sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 20px 15px 50px 15px; overflow-x: hidden; }
@@ -19,34 +19,45 @@
         .ambient-orb-1 { position: fixed; top: -50px; left: -50px; width: 250px; height: 250px; background: var(--apple-blue); border-radius: 50%; filter: blur(100px); opacity: 0.35; z-index: -1; }
         .ambient-orb-2 { position: fixed; bottom: 50px; right: -50px; width: 300px; height: 300px; background: var(--apple-purple); border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: -1; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 20px 0; }
+        .header { display: flex; flex-direction: column; gap: 5px; margin: 10px 0 20px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
         .header h1 { margin: 0; font-size: 26px; font-weight: 800; }
         .streak { background: rgba(255, 159, 10, 0.15); border: 1px solid rgba(255, 159, 10, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; color: var(--apple-orange); backdrop-filter: blur(10px); }
+        
+        /* RPG Уровень */
+        .level-bar-container { background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; width: 100%; margin-top: 5px; overflow: hidden; position: relative; }
+        .level-bar-fill { background: var(--exp-color); height: 100%; width: 0%; transition: 0.5s; box-shadow: 0 0 10px var(--exp-color); }
+        .level-text { font-size: 12px; color: var(--exp-color); font-weight: bold; margin-top: 2px; }
 
         .card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 22px; padding: 18px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { margin-top: 0; font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-
-        input[type="number"] { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 16px; margin-bottom: 10px; }
-        input[type="number"]:focus { outline: none; border-color: var(--apple-blue); background: rgba(10, 132, 255, 0.1); }
         
+        /* ИИ Тренер */
+        .ai-coach { background: linear-gradient(135deg, rgba(191, 90, 242, 0.1) 0%, rgba(10, 132, 255, 0.1) 100%); border: 1px solid rgba(191, 90, 242, 0.3); border-radius: 16px; padding: 15px; margin-bottom: 15px; display: flex; gap: 12px; align-items: center; }
+        .ai-icon { font-size: 24px; animation: float 3s ease-in-out infinite; }
+        .ai-text { font-size: 14px; line-height: 1.4; color: #e5e5ea; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+
+        h2 { margin-top: 0; font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        input[type="number"] { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 16px; margin-bottom: 10px; }
         .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
         button { width: 100%; padding: 14px; background: linear-gradient(135deg, #32d74b 0%, #28a745 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         button:active { transform: scale(0.97); }
-        button:disabled { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); cursor: not-allowed; transform: none; }
+        button:disabled { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); cursor: not-allowed; }
         .btn-blue { background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%); }
+        .btn-share { background: linear-gradient(135deg, #bf5af2 0%, #5e5ce6 100%); margin-top: 10px; }
 
         canvas { width: 100% !important; height: 180px !important; }
-        ul { padding-left: 20px; margin: 0 0 15px 0; color: var(--text-muted); line-height: 1.6; }
+        ul { padding-left: 20px; margin: 0 0 15px 0; color: var(--text-muted); }
         li span { color: var(--text-main); font-weight: 500; }
 
         .heatmap-container { display: flex; justify-content: space-between; gap: 6px; }
         .day-box { flex: 1; aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: var(--text-muted); }
         .day-box.active { background: var(--apple-green); color: var(--bg-black); box-shadow: 0 0 10px rgba(50, 215, 75, 0.4); border: none; }
         
-        .timer-display { font-size: 42px; font-weight: 800; text-align: center; color: var(--apple-orange); font-variant-numeric: tabular-nums; margin: 5px 0; text-shadow: 0 0 15px rgba(255, 159, 10, 0.4); }
+        .timer-display { font-size: 42px; font-weight: 800; text-align: center; color: var(--apple-orange); font-variant-numeric: tabular-nums; margin: 5px 0; }
         .timer-controls { display: flex; gap: 8px; margin-bottom: 15px; }
-        .timer-btn { background: rgba(255, 159, 10, 0.2); color: var(--apple-orange); padding: 8px; font-size: 13px; border-radius: 8px; flex: 1; text-align: center; font-weight: bold; border: 1px solid rgba(255, 159, 10, 0.3); }
+        .timer-btn { background: rgba(255, 159, 10, 0.2); color: var(--apple-orange); padding: 8px; font-size: 13px; border-radius: 8px; flex: 1; text-align: center; font-weight: bold; }
 
         .water-container { display: flex; justify-content: space-between; margin-top: 5px; }
         .water-drop { font-size: 24px; opacity: 0.3; transition: 0.3s; cursor: pointer; filter: grayscale(100%); }
@@ -57,12 +68,12 @@
         .macro-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
         .macro-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; width: 0%; }
         
-        .c-cal { color: var(--apple-red); } .bg-cal { background: var(--apple-red); box-shadow: 0 0 8px var(--apple-red); }
-        .c-pro { color: var(--apple-green); } .bg-pro { background: var(--apple-green); box-shadow: 0 0 8px var(--apple-green); }
-        .c-fat { color: var(--apple-orange); } .bg-fat { background: var(--apple-orange); box-shadow: 0 0 8px var(--apple-orange); }
-        .c-crb { color: var(--apple-blue); } .bg-crb { background: var(--apple-blue); box-shadow: 0 0 8px var(--apple-blue); }
+        .c-cal { color: var(--apple-red); } .bg-cal { background: var(--apple-red); }
+        .c-pro { color: var(--apple-green); } .bg-pro { background: var(--apple-green); }
+        .c-fat { color: var(--apple-orange); } .bg-fat { background: var(--apple-orange); }
+        .c-crb { color: var(--apple-blue); } .bg-crb { background: var(--apple-blue); }
 
-        .cloud-status { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; }
+        .cloud-status { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; margin-bottom: 20px;}
     </style>
 </head>
 <body>
@@ -71,8 +82,17 @@
     <div class="ambient-orb-2"></div>
 
     <div class="header">
-        <h1>Tracker PRO</h1>
-        <div class="streak" id="streakDisplay">🔥 0</div>
+        <div class="header-top">
+            <h1>Tracker PRO</h1>
+            <div class="streak" id="streakDisplay">🔥 0</div>
+        </div>
+        <div class="level-text" id="levelText">Уровень 1: Новичок (0/100 EXP)</div>
+        <div class="level-bar-container"><div class="level-bar-fill" id="levelBar"></div></div>
+    </div>
+
+    <div class="ai-coach">
+        <div class="ai-icon">🧠</div>
+        <div class="ai-text" id="coachText">Анализирую твои данные...</div>
     </div>
 
     <div class="card">
@@ -81,19 +101,19 @@
     </div>
 
     <div class="card">
-        <h2>💧 Вода (Норма: 8 стаканов)</h2>
+        <h2>💧 Вода (+5 EXP)</h2>
         <div class="water-container" id="waterBox"></div>
     </div>
 
     <div class="card">
-        <h2>🥩 Питание (Цели на рост)</h2>
+        <h2>🥩 Питание (+15 EXP)</h2>
         <div class="input-row">
-            <input type="number" id="inpCal" placeholder="Ккал (2500)" inputmode="decimal">
-            <input type="number" id="inpPro" placeholder="Белок (130г)" inputmode="decimal">
+            <input type="number" id="inpCal" placeholder="Ккал" inputmode="decimal">
+            <input type="number" id="inpPro" placeholder="Белок" inputmode="decimal">
         </div>
         <div class="input-row">
-            <input type="number" id="inpFat" placeholder="Жиры (80г)" inputmode="decimal">
-            <input type="number" id="inpCrb" placeholder="Угли (300г)" inputmode="decimal">
+            <input type="number" id="inpFat" placeholder="Жиры" inputmode="decimal">
+            <input type="number" id="inpCrb" placeholder="Угли" inputmode="decimal">
         </div>
         <button class="btn-blue" style="margin-bottom:15px; padding: 10px;" onclick="saveMacros()">Записать еду</button>
         
@@ -116,7 +136,7 @@
     </div>
 
     <div class="card">
-        <h2>⚖️ Вес (Цель: 75 кг)</h2>
+        <h2>⚖️ Вес (+10 EXP)</h2>
         <div class="input-row">
             <input type="number" id="weightInput" placeholder="Текущий вес" step="0.1" inputmode="decimal">
             <button id="weightBtn" class="btn-blue" style="width: 50%;" onclick="saveWeight()">Записать</button>
@@ -125,7 +145,7 @@
     </div>
 
     <div class="card">
-        <h2>📏 Замеры объемов (см)</h2>
+        <h2>📏 Замеры объемов</h2>
         <div class="input-row">
             <input type="number" id="inpBicep" placeholder="Бицепс" inputmode="decimal">
             <input type="number" id="inpChest" placeholder="Грудь" inputmode="decimal">
@@ -135,7 +155,7 @@
     </div>
 
     <div class="card">
-        <h2>⏱ Умный таймер</h2>
+        <h2>⏱ Таймер отдыха</h2>
         <div class="timer-display" id="timer">01:00</div>
         <div class="timer-controls">
             <div class="timer-btn" onclick="adjTimer(-15)">-15с</div>
@@ -147,81 +167,110 @@
     </div>
 
     <div class="card">
-        <h2>💪 Тренировка</h2>
+        <h2>💪 Тренировка (+50 EXP)</h2>
         <ul id="workoutPlan"></ul>
         <button id="workoutBtn" onclick="completeWorkout()">Тренировка выполнена</button>
     </div>
 
+    <button class="btn-share" onclick="shareProgress()">📸 Поделиться прогрессом</button>
+    
     <div class="cloud-status" id="cloudStatus">📱 Загрузка...</div>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
+        tg.expand(); tg.ready();
 
         let todayStr = new Date().toDateString();
         function triggerVibration(style = 'medium') { if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(style); }
 
+        // Добавили exp в базу данных
         let appData = {
-            streak: 0, weightData: [61.0], weightLabels: ['Старт'], activityHistory: [],
+            streak: 0, exp: 0, weightData: [61.0], weightLabels: ['Старт'], activityHistory: [],
             lastWeightDate: '', lastWorkoutDate: '', lastResetDate: '',
-            water: 0, macros: { cal: 0, pro: 0, fat: 0, crb: 0 },
-            meas: { bicep: '', chest: '', waist: '' }
+            water: 0, macros: { cal: 0, pro: 0, fat: 0, crb: 0 }, meas: { bicep: '', chest: '', waist: '' }
         };
 
-        // БЕЗОПАСНАЯ ЗАГРУЗКА (Гибрид)
         function safeLoad() {
             try {
                 let local = localStorage.getItem('fit_pro_safe');
-                if (local) appData = JSON.parse(local);
+                if (local) appData = { ...appData, ...JSON.parse(local) }; // Merge чтобы не потерять новые ключи (exp)
                 
                 if (tg.CloudStorage && tg.CloudStorage.getItem) {
                     tg.CloudStorage.getItem('fit_pro_safe', (err, val) => {
-                        if (!err && val) {
-                            appData = JSON.parse(val);
-                            document.getElementById('cloudStatus').innerHTML = '☁️ Облако активно';
-                        } else {
-                            document.getElementById('cloudStatus').innerHTML = '📱 Работает локально';
-                        }
+                        if (!err && val) { appData = { ...appData, ...JSON.parse(val) }; document.getElementById('cloudStatus').innerHTML = '☁️ Данные синхронизированы'; } 
                         finalizeLoad();
                     });
-                } else {
-                    document.getElementById('cloudStatus').innerHTML = '📱 Работает локально';
-                    finalizeLoad();
-                }
-            } catch(e) {
-                document.getElementById('cloudStatus').innerHTML = '📱 Работает локально';
-                finalizeLoad();
-            }
+                } else { finalizeLoad(); }
+            } catch(e) { finalizeLoad(); }
         }
 
         function finalizeLoad() {
             if (appData.lastResetDate !== todayStr) {
                 appData.water = 0; appData.macros = { cal: 0, pro: 0, fat: 0, crb: 0 };
-                appData.lastResetDate = todayStr;
-                safeSync();
+                appData.lastResetDate = todayStr; safeSync();
             }
-            initUI();
+            initUI(); updateCoach();
         }
 
-        // БЕЗОПАСНОЕ СОХРАНЕНИЕ
         function safeSync() {
             let dataStr = JSON.stringify(appData);
-            localStorage.setItem('fit_pro_safe', dataStr); // Всегда сохраняем в телефон мгновенно
+            localStorage.setItem('fit_pro_safe', dataStr);
+            try { if (tg.CloudStorage && tg.CloudStorage.setItem) tg.CloudStorage.setItem('fit_pro_safe', dataStr, () => {}); } catch(e) {}
+        }
+
+        // RPG Система
+        const levelNames = ["Новичок", "Любитель", "Атлет", "Воин", "Титан", "Киборг", "Машина", "Полубог", "Бог Олимпа", "Мистер Олимпия"];
+        function addExp(amount) {
+            appData.exp += amount;
+            safeSync(); updateRPG();
+        }
+
+        function updateRPG() {
+            let level = Math.floor(appData.exp / 100) + 1;
+            let currentLevelExp = appData.exp % 100;
+            let title = levelNames[Math.min(level - 1, levelNames.length - 1)];
             
-            try {
-                if (tg.CloudStorage && tg.CloudStorage.setItem) {
-                    tg.CloudStorage.setItem('fit_pro_safe', dataStr, (err, success) => {
-                        if(success) document.getElementById('cloudStatus').innerHTML = '☁️ Облако обновлено ✔️';
-                    });
-                }
-            } catch(e) {}
+            document.getElementById('levelText').innerText = `Уровень ${level}: ${title} (${currentLevelExp}/100 EXP)`;
+            document.getElementById('levelBar').style.width = `${currentLevelExp}%`;
+        }
+
+        // ИИ Тренер
+        function updateCoach() {
+            let coachMsg = "Отличный темп! Главное — стабильность. Идем к 75 кг!";
+            
+            if (appData.water < 4 && new Date().getHours() > 14) {
+                coachMsg = "Внимание: Ты пьешь мало воды! Мышцы состоят на 70% из воды, без неё они не растут.";
+            } else if (appData.macros.cal < 1000 && new Date().getHours() > 18) {
+                coachMsg = "Брат, ты в дефиците калорий. Так массу не набрать. Срочно съешь плотный ужин!";
+            } else if (appData.streak === 0) {
+                coachMsg = "Самое сложное — начать. Сделай хотя бы одну тренировку сегодня и запусти серию!";
+            } else if (appData.activityHistory.includes(todayStr) && appData.macros.cal >= 2000) {
+                coachMsg = "Идеальный день! Тренировка сделана, калории съедены. Ты растешь прямо сейчас во сне.";
+            }
+
+            document.getElementById('coachText').innerText = coachMsg;
+        }
+
+        // Кнопка Поделиться
+        function shareProgress() {
+            triggerVibration('heavy');
+            let level = Math.floor(appData.exp / 100) + 1;
+            let currentWeight = appData.weightData[appData.weightData.length - 1];
+            
+            let reportText = `🏆 Мой фитнес-прогресс:\n\n⚖️ Вес: ${currentWeight} кг (Цель: 75 кг)\n🔥 Серия тренировок: ${appData.streak} дней\n⭐ Уровень: ${level}\n💧 Вода сегодня: ${appData.water}/8\n\nСтрою титановую форму через приложение-трекер! 🚀`;
+            
+            // Копируем в буфер
+            navigator.clipboard.writeText(reportText).then(() => {
+                tg.showAlert('Твой отчет скопирован в буфер обмена! Теперь ты можешь вставить его в любой чат другу или боту.');
+            }).catch(err => {
+                tg.showAlert('Отчет сгенерирован:\n\n' + reportText);
+            });
         }
 
         let chart;
         function initUI() {
             document.getElementById('streakDisplay').innerText = `🔥 ${appData.streak}`;
-            renderHeatmap(); renderWater(); renderMacros(); checkLocks();
+            renderHeatmap(); renderWater(); renderMacros(); checkLocks(); updateRPG();
 
             document.getElementById('inpBicep').value = appData.meas.bicep || '';
             document.getElementById('inpChest').value = appData.meas.chest || '';
@@ -259,7 +308,7 @@
             let box = document.getElementById('waterBox'); box.innerHTML = '';
             for(let i=1; i<=8; i++) {
                 let d = document.createElement('div'); d.className = `water-drop ${i <= appData.water ? 'filled' : ''}`; d.innerText = '💧';
-                d.onclick = () => { triggerVibration('light'); appData.water = i; safeSync(); renderWater(); };
+                d.onclick = () => { triggerVibration('light'); appData.water = i; addExp(5); renderWater(); updateCoach(); };
                 box.appendChild(d);
             }
         }
@@ -270,7 +319,7 @@
             let f = parseInt(document.getElementById('inpFat').value) || 0; let cb = parseInt(document.getElementById('inpCrb').value) || 0;
             appData.macros.cal += c; appData.macros.pro += p; appData.macros.fat += f; appData.macros.crb += cb;
             document.getElementById('inpCal').value = ''; document.getElementById('inpPro').value = ''; document.getElementById('inpFat').value = ''; document.getElementById('inpCrb').value = '';
-            safeSync(); renderMacros();
+            addExp(15); renderMacros(); updateCoach();
         }
 
         function renderMacros() {
@@ -318,17 +367,17 @@
             appData.weightData.push(parseFloat(val));
             if (appData.weightLabels.length > 10) { appData.weightLabels.shift(); appData.weightData.shift(); }
             appData.lastWeightDate = todayStr;
-            safeSync(); initUI(); tg.showAlert('Вес зафиксирован!');
+            addExp(10); initUI(); tg.showAlert('Вес зафиксирован!');
         }
 
         function completeWorkout() {
             triggerVibration('rigid'); appData.streak++;
             if(!appData.activityHistory.includes(todayStr)) appData.activityHistory.push(todayStr);
             appData.lastWorkoutDate = todayStr;
-            safeSync(); initUI(); tg.showAlert('Машина! Тренировка засчитана.');
+            addExp(50); initUI(); updateCoach(); tg.showAlert('Машина! Тренировка засчитана (+50 EXP).');
         }
 
-        safeLoad(); // Запускаем гибридную загрузку
+        safeLoad();
     </script>
 </body>
 </html>
