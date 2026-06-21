@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Master</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root { --tg-bg: var(--tg-theme-bg-color, #ffffff); --tg-text: var(--tg-theme-text-color, #000000); --tg-btn: var(--tg-theme-button-color, #3390ec); }
+        body { background-color: var(--tg-bg); color: var(--tg-text); font-family: -apple-system, sans-serif; padding: 15px; margin: 0; }
+        .card { background: var(--tg-theme-secondary-bg-color, #f4f4f5); padding: 15px; border-radius: 16px; margin-bottom: 20px; }
+        h2 { font-size: 18px; margin-top: 0; }
+        .item { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; justify-content: space-between; }
+        input { background: transparent; border: 1px solid #ccc; border-radius: 8px; padding: 8px; color: var(--tg-text); width: 80px; }
+        .btn { background: var(--tg-btn); color: white; border: none; padding: 12px; width: 100%; border-radius: 12px; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🎯 Твоя цель (кг)</h2>
+        <input type="number" id="goal" placeholder="75">
+    </div>
+
+    <div class="card">
+        <h2>💪 Тренировка на сегодня</h2>
+        <div id="workout-list"></div>
+    </div>
+
+    <div class="card">
+        <h2>🍎 Питание (План на день)</h2>
+        <div id="food-list"></div>
+        <p>Цель: 2500 ккал</p>
+    </div>
+
+    <button class="btn" onclick="saveData()">Сохранить прогресс</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const dailyData = {
+            "Тренировка": ["Отжимания: 3х12", "Приседания: 3х15", "Планка: 60 сек"],
+            "Питание": ["Овсянка с орехами", "Курица с рисом", "Протеиновый шейк"]
+        };
+
+        // Рендер списков
+        document.getElementById('workout-list').innerHTML = dailyData["Тренировка"].map(i => `<div class="item">${i}</div>`).join('');
+        document.getElementById('food-list').innerHTML = dailyData["Питание"].map(i => `<div class="item">${i}</div>`).join('');
+
+        function saveData() {
+            const goal = document.getElementById('goal').value;
+            tg.sendData(`Цель: ${goal} кг. Тренировка выполнена, питание по плану!`);
+            tg.close();
+        }
+    </script>
+</body>
+</html>
