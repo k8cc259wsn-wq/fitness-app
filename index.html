@@ -11,14 +11,13 @@
             --bg-black: #000000; --glass-bg: rgba(28, 28, 30, 0.65); --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff; --text-muted: rgba(255, 255, 255, 0.6);
             --apple-green: #32d74b; --apple-red: #ff453a; --exp-color: #ffd60a;
-            /* Динамический акцент (по умолчанию синий) */
             --accent: #0a84ff; --accent-glow: rgba(10, 132, 255, 0.4); --sub-accent: #bf5af2;
         }
 
         body { font-family: -apple-system, sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 20px 15px 50px 15px; overflow-x: hidden; }
 
-        .ambient-orb-1 { position: fixed; top: -50px; left: -50px; width: 250px; height: 250px; background: var(--accent); border-radius: 50%; filter: blur(100px); opacity: 0.35; z-index: -1; transition: 0.5s; }
-        .ambient-orb-2 { position: fixed; bottom: 50px; right: -50px; width: 300px; height: 300px; background: var(--sub-accent); border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: -1; transition: 0.5s; }
+        .ambient-orb-1 { position: fixed; top: -50px; left: -50px; width: 250px; height: 250px; background: var(--accent); border-radius: 50%; filter: blur(100px); opacity: 0.35; z-index: -1; transition: transform 0.2s ease-out, background 0.5s; }
+        .ambient-orb-2 { position: fixed; bottom: 50px; right: -50px; width: 300px; height: 300px; background: var(--sub-accent); border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: -1; transition: transform 0.2s ease-out, background 0.5s; }
 
         .header { display: flex; flex-direction: column; gap: 5px; margin: 10px 0 20px 0; }
         .header-top { display: flex; justify-content: space-between; align-items: center; }
@@ -39,8 +38,9 @@
         h2 { margin-top: 0; font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
         h2 span { display: flex; align-items: center; gap: 8px; }
 
-        input[type="number"] { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 16px; margin-bottom: 10px; }
-        input[type="number"]:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08); }
+        input[type="number"], textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 16px; margin-bottom: 10px; font-family: inherit; }
+        input[type="number"]:focus, textarea:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08); }
+        textarea { resize: none; height: 80px; }
         .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
         button { width: 100%; padding: 14px; background: linear-gradient(135deg, #32d74b 0%, #28a745 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(50,215,75,0.2); }
@@ -52,7 +52,6 @@
 
         canvas { width: 100% !important; height: 180px !important; }
         
-        /* Интерактивный список тренировок */
         ul.workout-checklist { list-style: none; padding: 0; margin: 0 0 15px 0; }
         ul.workout-checklist li { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         ul.workout-checklist li.done { border-color: var(--apple-green); background: rgba(50, 215, 75, 0.08); opacity: 0.7; }
@@ -70,6 +69,12 @@
         .water-drop { font-size: 24px; opacity: 0.3; transition: 0.3s; cursor: pointer; filter: grayscale(100%); }
         .water-drop.filled { opacity: 1; filter: grayscale(0%); text-shadow: 0 0 10px rgba(10, 132, 255, 0.5); transform: scale(1.1); }
 
+        /* Сон */
+        .sleep-display { font-size: 32px; font-weight: bold; text-align: center; color: var(--sub-accent); margin-bottom: 10px; }
+        .sleep-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+        .sleep-btn { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; color: white; text-align: center; font-weight: bold; cursor: pointer; }
+        .sleep-btn:active { background: rgba(255,255,255,0.1); }
+
         .macro-box { margin-bottom: 12px; }
         .macro-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
         .macro-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
@@ -80,10 +85,8 @@
         .c-fat { color: #ff9f0a; } .bg-fat { background: #ff9f0a; }
         .c-crb { color: #0a84ff; } .bg-crb { background: #0a84ff; }
 
-        /* Темы оформления */
         .theme-selector { display: flex; gap: 10px; margin-bottom: 15px; }
         .theme-dot { flex: 1; height: 35px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
-        
         .toggle-settings { font-size: 12px; color: var(--accent); cursor: pointer; text-decoration: underline; }
         .hidden-settings { display: none; margin-top: 15px; border-top: 1px solid var(--glass-border); padding-top: 15px; }
 
@@ -107,6 +110,16 @@
     <div class="ai-coach">
         <div class="ai-icon">🧠</div>
         <div class="ai-text" id="coachText">Синхронизация нейропрофиля...</div>
+    </div>
+
+    <div class="card">
+        <h2><span>💤 Сон и Восстановление</span></h2>
+        <div class="sleep-display"><span id="sleepHours">7</span> часов</div>
+        <div class="sleep-controls">
+            <div class="sleep-btn" onclick="adjSleep(-0.5)">-0.5 ч</div>
+            <div class="sleep-btn" onclick="adjSleep(0.5)">+0.5 ч</div>
+        </div>
+        <button class="btn-accent" style="background: linear-gradient(135deg, #bf5af2 0%, #5e5ce6 100%); box-shadow: 0 4px 15px rgba(191,90,242,0.3);" onclick="saveSleep()" id="btnSleep">Сохранить сон</button>
     </div>
 
     <div class="card">
@@ -179,7 +192,7 @@
     </div>
 
     <div class="card">
-        <h2><span>⏱ Квантовый таймер (с аудио)</span></h2>
+        <h2><span>⏱ Квантовый таймер</span></h2>
         <div class="timer-display" id="timer">01:00</div>
         <div class="timer-controls">
             <div class="timer-btn" onclick="adjTimer(-15)">-15с</div>
@@ -193,6 +206,7 @@
     <div class="card">
         <h2><span>💪 Программа перегрузки</span></h2>
         <ul class="workout-checklist" id="workoutPlan"></ul>
+        <textarea id="workoutNotes" placeholder="Заметки (напр. Добавил +2 повторения, мышцы болят)..."></textarea>
         <button id="workoutBtn" onclick="completeWorkout()" disabled>Выполни все упражнения</button>
     </div>
 
@@ -207,22 +221,23 @@
         let todayStr = new Date().toDateString();
         function triggerVibration(style = 'medium') { if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(style); }
 
-        // Добавили настройки целей и тему в структуру данных
+        // Добавляем новые анти-чит переменные в базу
         let appData = {
             streak: 0, exp: 0, weightData: [61.0], weightLabels: ['Старт'], activityHistory: [],
-            lastWeightDate: '', lastWorkoutDate: '', lastResetDate: '',
-            water: 0, macros: { cal: 0, pro: 0, fat: 0, crb: 0 }, meas: { bicep: '', chest: '', waist: '' },
+            lastWeightDate: '', lastWorkoutDate: '', lastResetDate: '', lastSleepDate: '',
+            water: 0, maxWaterToday: 0, foodSavesToday: 0, sleep: 7, notes: '',
+            macros: { cal: 0, pro: 0, fat: 0, crb: 0 }, meas: { bicep: '', chest: '', waist: '' },
             goals: { weight: 75, water: 8, cal: 2500, pro: 130, fat: 80, crb: 300 },
             theme: 'blue'
         };
 
         function safeLoad() {
             try {
-                let local = localStorage.getItem('fit_pro_v8');
+                let local = localStorage.getItem('fit_pro_v9');
                 if (local) appData = { ...appData, ...JSON.parse(local) }; 
                 
                 if (tg.CloudStorage && tg.CloudStorage.getItem) {
-                    tg.CloudStorage.getItem('fit_pro_v8', (err, val) => {
+                    tg.CloudStorage.getItem('fit_pro_v9', (err, val) => {
                         if (!err && val) { appData = { ...appData, ...JSON.parse(val) }; document.getElementById('cloudStatus').innerHTML = '☁️ Матрица синхронизирована'; } 
                         finalizeLoad();
                     });
@@ -231,15 +246,18 @@
         }
 
         function finalizeLoad() {
+            // Ежедневный сброс (Анти-чит)
             if (appData.lastResetDate !== todayStr) {
-                appData.water = 0; appData.macros = { cal: 0, pro: 0, fat: 0, crb: 0 };
+                appData.water = 0; appData.maxWaterToday = 0; appData.foodSavesToday = 0;
+                appData.macros = { cal: 0, pro: 0, fat: 0, crb: 0 };
+                appData.notes = '';
                 appData.lastResetDate = todayStr; safeSync();
             }
-            // Рендерим настройки целей в инпуты
-            document.getElementById('gWeight').value = appData.goals.weight;
-            document.getElementById('gWater').value = appData.goals.water;
-            document.getElementById('gCal').value = appData.goals.cal;
-            document.getElementById('gPro').value = appData.goals.pro;
+            
+            document.getElementById('gWeight').value = appData.goals.weight; document.getElementById('gWater').value = appData.goals.water;
+            document.getElementById('gCal').value = appData.goals.cal; document.getElementById('gPro').value = appData.goals.pro;
+            document.getElementById('sleepHours').innerText = appData.sleep;
+            document.getElementById('workoutNotes').value = appData.notes || '';
             
             applyTheme(appData.theme);
             initUI(); updateCoach();
@@ -247,70 +265,53 @@
 
         function safeSync() {
             let dataStr = JSON.stringify(appData);
-            localStorage.setItem('fit_pro_v8', dataStr);
-            try { if (tg.CloudStorage && tg.CloudStorage.setItem) tg.CloudStorage.setItem('fit_pro_v8', dataStr, () => {}); } catch(e) {}
+            localStorage.setItem('fit_pro_v9', dataStr);
+            try { if (tg.CloudStorage && tg.CloudStorage.setItem) tg.CloudStorage.setItem('fit_pro_v9', dataStr, () => {}); } catch(e) {}
         }
 
-        // Кастомизация тем
-        function setTheme(themeName) {
-            triggerVibration('light');
-            appData.theme = themeName;
-            safeSync();
-            applyTheme(themeName);
-            if(chart) initUI(); // Перерисовать график с новым цветом
+        // 3D Параллакс эффект для фона
+        document.addEventListener('touchmove', (e) => {
+            let x = (e.touches[0].clientX / window.innerWidth - 0.5) * 40;
+            let y = (e.touches[0].clientY / window.innerHeight - 0.5) * 40;
+            document.getElementById('orb1').style.transform = `translate(${x}px, ${y}px)`;
+            document.getElementById('orb2').style.transform = `translate(${-x}px, ${-y}px)`;
+        });
+
+        // Сон
+        let currentSleep = appData.sleep || 7;
+        function adjSleep(val) { triggerVibration('light'); currentSleep += val; if(currentSleep < 0) currentSleep = 0; if(currentSleep > 16) currentSleep = 16; document.getElementById('sleepHours').innerText = currentSleep; }
+        function saveSleep() {
+            triggerVibration('heavy');
+            appData.sleep = currentSleep;
+            if (appData.lastSleepDate !== todayStr) {
+                addExp(10); // Опыт за сон дается 1 раз в день
+                appData.lastSleepDate = todayStr;
+            }
+            safeSync(); updateCoach();
+            document.getElementById('btnSleep').disabled = true;
+            document.getElementById('btnSleep').innerText = "✓ Записано";
         }
 
+        function setTheme(themeName) { triggerVibration('light'); appData.theme = themeName; safeSync(); applyTheme(themeName); if(chart) initUI(); }
         function applyTheme(themeName) {
             let root = document.documentElement;
-            if (themeName === 'blue') {
-                root.style.setProperty('--accent', '#0a84ff'); root.style.setProperty('--accent-glow', 'rgba(10, 132, 255, 0.4)'); root.style.setProperty('--sub-accent', '#bf5af2');
-                document.getElementById('appTitle').innerText = 'Tracker PRO • Cyan';
-            } else if (themeName === 'purple') {
-                root.style.setProperty('--accent', '#bf5af2'); root.style.setProperty('--accent-glow', 'rgba(191, 90, 242, 0.4)'); root.style.setProperty('--sub-accent', '#ff2d55');
-                document.getElementById('appTitle').innerText = 'Tracker PRO • Pink';
-            } else if (themeName === 'gold') {
-                root.style.setProperty('--accent', '#ff9f0a'); root.style.setProperty('--accent-glow', 'rgba(255, 159, 10, 0.4)'); root.style.setProperty('--sub-accent', '#ac8e68');
-                document.getElementById('appTitle').innerText = 'Tracker PRO • Gold';
-            } else if (themeName === 'acid') {
-                root.style.setProperty('--accent', '#32d74b'); root.style.setProperty('--accent-glow', 'rgba(50, 215, 75, 0.4)'); root.style.setProperty('--sub-accent', '#00f5ff');
-                document.getElementById('appTitle').innerText = 'Tracker PRO • Acid';
-            }
+            if (themeName === 'blue') { root.style.setProperty('--accent', '#0a84ff'); root.style.setProperty('--accent-glow', 'rgba(10, 132, 255, 0.4)'); root.style.setProperty('--sub-accent', '#bf5af2'); document.getElementById('appTitle').innerText = 'Tracker PRO • Cyan'; } 
+            else if (themeName === 'purple') { root.style.setProperty('--accent', '#bf5af2'); root.style.setProperty('--accent-glow', 'rgba(191, 90, 242, 0.4)'); root.style.setProperty('--sub-accent', '#ff2d55'); document.getElementById('appTitle').innerText = 'Tracker PRO • Pink'; } 
+            else if (themeName === 'gold') { root.style.setProperty('--accent', '#ff9f0a'); root.style.setProperty('--accent-glow', 'rgba(255, 159, 10, 0.4)'); root.style.setProperty('--sub-accent', '#ac8e68'); document.getElementById('appTitle').innerText = 'Tracker PRO • Gold'; } 
+            else if (themeName === 'acid') { root.style.setProperty('--accent', '#32d74b'); root.style.setProperty('--accent-glow', 'rgba(50, 215, 75, 0.4)'); root.style.setProperty('--sub-accent', '#00f5ff'); document.getElementById('appTitle').innerText = 'Tracker PRO • Acid'; }
         }
 
-        function toggleSettings() {
-            triggerVibration('light');
-            let block = document.getElementById('settingsBlock');
-            block.style.display = block.style.display === 'block' ? 'none' : 'block';
-        }
-
+        function toggleSettings() { triggerVibration('light'); let block = document.getElementById('settingsBlock'); block.style.display = block.style.display === 'block' ? 'none' : 'block'; }
         function saveCustomGoals() {
             triggerVibration('medium');
-            appData.goals.weight = parseFloat(document.getElementById('gWeight').value) || 75;
-            appData.goals.water = parseInt(document.getElementById('gWater').value) || 8;
-            appData.goals.cal = parseInt(document.getElementById('gCal').value) || 2500;
-            appData.goals.pro = parseInt(document.getElementById('gPro').value) || 130;
-            // Авторасчет жиров и углей пропорционально калориям
-            appData.goals.fat = Math.round((appData.goals.cal * 0.3) / 9);
-            appData.goals.crb = Math.round((appData.goals.cal * 0.5) / 4);
-            
-            safeSync(); initUI(); updateCoach();
-            toggleSettings();
-            tg.showAlert('Архитектура целей перестроена!');
+            appData.goals.weight = parseFloat(document.getElementById('gWeight').value) || 75; appData.goals.water = parseInt(document.getElementById('gWater').value) || 8;
+            appData.goals.cal = parseInt(document.getElementById('gCal').value) || 2500; appData.goals.pro = parseInt(document.getElementById('gPro').value) || 130;
+            appData.goals.fat = Math.round((appData.goals.cal * 0.3) / 9); appData.goals.crb = Math.round((appData.goals.cal * 0.5) / 4);
+            safeSync(); initUI(); updateCoach(); toggleSettings(); tg.showAlert('Архитектура целей перестроена!');
         }
 
-        // Голосовой движок Тренера
-        function speakVoice(text) {
-            try {
-                if ('speechSynthesis' in window) {
-                    let utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'ru-RU';
-                    utterance.rate = 1.0; 
-                    window.speechSynthesis.speak(utterance);
-                }
-            } catch(e) {}
-        }
+        function speakVoice(text) { try { if ('speechSynthesis' in window) { let utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'ru-RU'; window.speechSynthesis.speak(utterance); } } catch(e) {} }
 
-        // RPG Система
         const levelNames = ["Новичок", "Любитель", "Атлет", "Воин", "Титан", "Киборг", "Машина", "Полубог", "Олимпиец", "Альфа"];
         function addExp(amount) { appData.exp += amount; safeSync(); updateRPG(); }
         function updateRPG() {
@@ -320,10 +321,11 @@
             document.getElementById('levelBar').style.width = `${currentLevelExp}%`;
         }
 
-        // ИИ Аналитик
         function updateCoach() {
             let coachMsg = "Все системы в норме. Стабильно закрывай кольца для гипертрофии мыщц.";
-            if (appData.water < (appData.goals.water / 2) && new Date().getHours() > 15) {
+            if (appData.sleep < 7) {
+                coachMsg = "Внимание: Ты спал всего " + appData.sleep + " ч! Мышцы растут в фазе глубокого сна. Старайся спать минимум 7-8 часов.";
+            } else if (appData.water < (appData.goals.water / 2) && new Date().getHours() > 15) {
                 coachMsg = "Критический уровень дегидратации. Выпей воды, иначе замедлишь синтез белка!";
             } else if (appData.macros.cal < (appData.goals.cal / 2) && new Date().getHours() > 19) {
                 coachMsg = "Катаболическая угроза! Слишком мало калорий для роста массы. Срочно закинь углеводы.";
@@ -335,9 +337,8 @@
 
         function shareProgress() {
             triggerVibration('heavy');
-            let level = Math.floor(appData.exp / 100) + 1;
-            let currentWeight = appData.weightData[appData.weightData.length - 1];
-            let reportText = `🏆 Квантовый фитнес-отчет:\n\n⚖️ Вес: ${currentWeight} кг (Цель: ${appData.goals.weight} кг)\n🔥 Стрик: ${appData.streak} дней\n⭐ Уровень: ${level}\n🍗 Калории: ${appData.macros.cal}/${appData.goals.cal} ккал\n💧 Вода: ${appData.water}/${appData.goals.water} стаканов\n\nМониторинг формы в Telegram на максимум! 🚀`;
+            let level = Math.floor(appData.exp / 100) + 1; let currentWeight = appData.weightData[appData.weightData.length - 1];
+            let reportText = `🏆 Фитнес-отчет:\n\n⚖️ Вес: ${currentWeight} кг (Цель: ${appData.goals.weight} кг)\n🔥 Стрик: ${appData.streak} дней\n⭐ Уровень: ${level}\n💤 Сон: ${appData.sleep} ч.\n🍗 Калории: ${appData.macros.cal}/${appData.goals.cal}\n\nСтрою титановую форму! 🚀`;
             navigator.clipboard.writeText(reportText).then(() => { tg.showAlert('Матрица отчета скопирована! Вставляй в любой чат.'); });
         }
 
@@ -345,10 +346,9 @@
         function initUI() {
             document.getElementById('streakDisplay').innerText = `🔥 ${appData.streak}`;
             renderHeatmap(); renderWater(); renderMacros(); renderWorkoutChecklist(); checkLocks(); updateRPG();
+            if (appData.lastSleepDate === todayStr) { document.getElementById('btnSleep').disabled = true; document.getElementById('btnSleep').innerText = "✓ Записано"; }
 
-            document.getElementById('inpBicep').value = appData.meas.bicep || '';
-            document.getElementById('inpChest').value = appData.meas.chest || '';
-            document.getElementById('inpWaist').value = appData.meas.waist || '';
+            document.getElementById('inpBicep').value = appData.meas.bicep || ''; document.getElementById('inpChest').value = appData.meas.chest || ''; document.getElementById('inpWaist').value = appData.meas.waist || '';
 
             const ctx = document.getElementById('weightChart').getContext('2d');
             let accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
@@ -366,16 +366,12 @@
 
         function checkLocks() {
             if (appData.lastWeightDate === todayStr) { let wBtn = document.getElementById('weightBtn'); wBtn.disabled = true; wBtn.innerText = '✓'; }
-            if (appData.lastWorkoutDate === todayStr) { let woBtn = document.getElementById('workoutBtn'); woBtn.disabled = true; woBtn.innerText = '✓ Сессия закрыта'; }
+            if (appData.lastWorkoutDate === todayStr) { let woBtn = document.getElementById('workoutBtn'); woBtn.disabled = true; woBtn.innerText = '✓ Сессия закрыта'; document.getElementById('workoutNotes').disabled = true; }
         }
 
-        // Интерактивный Чеклист упражнений
         function renderWorkoutChecklist() {
             let ul = document.getElementById('workoutPlan'); ul.innerHTML = '';
-            if (appData.lastWorkoutDate === todayStr) {
-                ul.innerHTML = "<li class='done'><span>Все задачи на сегодня решены! Отдыхай.</span></li>";
-                return;
-            }
+            if (appData.lastWorkoutDate === todayStr) { ul.innerHTML = "<li class='done'><span>Все задачи на сегодня решены! Отдыхай.</span></li>"; return; }
             
             const bonusReps = Math.floor(appData.streak / 7) * 2;
             const workouts = [
@@ -386,48 +382,43 @@
             let currentDayPlan = new Date().getDay() % 3;
             if (currentDayPlan === 2) {
                 ul.innerHTML = "<li><span>Запланирован день восстановления</span></li><li><span>Сон + Профицит калорий</span></li>";
-                document.getElementById('workoutBtn').disabled = false;
-                document.getElementById('workoutBtn').innerText = "Активировать день отдыха";
+                document.getElementById('workoutBtn').disabled = false; document.getElementById('workoutBtn').innerText = "Активировать день отдыха";
             } else {
                 workouts[currentDayPlan].forEach((ex, idx) => {
-                    let li = document.createElement('li');
-                    let totalReps = ex.reps + bonusReps;
-                    li.id = `ex-${idx}`;
-                    li.innerHTML = `<span><strong>${ex.n}:</strong> ${ex.sets}х${totalReps}</span> <input type="checkbox" onclick="toggleExercise(${idx})">`;
-                    ul.appendChild(li);
+                    let li = document.createElement('li'); let totalReps = ex.reps + bonusReps; li.id = `ex-${idx}`;
+                    li.innerHTML = `<span><strong>${ex.n}:</strong> ${ex.sets}х${totalReps}</span> <input type="checkbox" onclick="toggleExercise(${idx})">`; ul.appendChild(li);
                 });
                 validateWorkoutButton();
             }
         }
 
-        function toggleExercise(idx) {
-            triggerVibration('light');
-            let li = document.getElementById(`ex-${idx}`);
-            li.classList.toggle('done');
-            validateWorkoutButton();
-        }
+        function toggleExercise(idx) { triggerVibration('light'); document.getElementById(`ex-${idx}`).classList.toggle('done'); validateWorkoutButton(); }
 
         function validateWorkoutButton() {
             if (appData.lastWorkoutDate === todayStr) return;
             let total = document.querySelectorAll('.workout-checklist input[type="checkbox"]').length;
             let checked = document.querySelectorAll('.workout-checklist input[type="checkbox"]:checked').length;
             let btn = document.getElementById('workoutBtn');
-            
-            if (total > 0 && checked === total) {
-                btn.disabled = false;
-                btn.innerText = "Уничтожить тренировку (+50 EXP)";
-            } else if (total > 0) {
-                btn.disabled = true;
-                btn.innerText = `Выполнено: ${checked}/${total} упражнений`;
-            }
+            if (total > 0 && checked === total) { btn.disabled = false; btn.innerText = "Уничтожить тренировку (+50 EXP)"; } 
+            else if (total > 0) { btn.disabled = true; btn.innerText = `Выполнено: ${checked}/${total} упражнений`; }
         }
 
+        // Логика воды с Анти-читом
         function renderWater() {
             let box = document.getElementById('waterBox'); box.innerHTML = '';
             let targetWater = appData.goals.water;
             for(let i=1; i<=targetWater; i++) {
                 let d = document.createElement('div'); d.className = `water-drop ${i <= appData.water ? 'filled' : ''}`; d.innerText = '💧';
-                d.onclick = () => { triggerVibration('light'); appData.water = i; addExp(5); renderWater(); updateCoach(); };
+                d.onclick = () => { 
+                    triggerVibration('light'); 
+                    appData.water = i;
+                    // Анти-чит: даем опыт только если побили сегодняшний максимум воды
+                    if (appData.water > appData.maxWaterToday) {
+                        addExp((appData.water - appData.maxWaterToday) * 5);
+                        appData.maxWaterToday = appData.water;
+                    }
+                    safeSync(); renderWater(); updateCoach(); 
+                };
                 box.appendChild(d);
             }
         }
@@ -437,8 +428,15 @@
             let c = parseInt(document.getElementById('inpCal').value) || 0; let p = parseInt(document.getElementById('inpPro').value) || 0;
             let f = parseInt(document.getElementById('inpFat').value) || 0; let cb = parseInt(document.getElementById('inpCrb').value) || 0;
             appData.macros.cal += c; appData.macros.pro += p; appData.macros.fat += f; appData.macros.crb += cb;
+            
+            // Анти-чит: опыт дается максимум 5 раз в день (за 5 приемов пищи)
+            if (appData.foodSavesToday < 5 && (c > 0 || p > 0)) {
+                addExp(10);
+                appData.foodSavesToday++;
+            }
+            
             document.getElementById('inpCal').value = ''; document.getElementById('inpPro').value = ''; document.getElementById('inpFat').value = ''; document.getElementById('inpCrb').value = '';
-            addExp(15); renderMacros(); updateCoach();
+            safeSync(); renderMacros(); updateCoach();
         }
 
         function renderMacros() {
@@ -449,59 +447,24 @@
             document.getElementById('txtCrb').innerText = `${m.crb}/${g.crb}g`; document.getElementById('barCrb').style.width = `${Math.min((m.crb/g.crb)*100, 100)}%`;
         }
 
-        function saveMeasurements() {
-            triggerVibration('heavy');
-            appData.meas.bicep = document.getElementById('inpBicep').value; appData.meas.chest = document.getElementById('inpChest').value; appData.meas.waist = document.getElementById('inpWaist').value;
-            safeSync(); tg.showAlert('Антропометрия сохранена в ядро!');
-        }
+        function saveMeasurements() { triggerVibration('heavy'); appData.meas.bicep = document.getElementById('inpBicep').value; appData.meas.chest = document.getElementById('inpChest').value; appData.meas.waist = document.getElementById('inpWaist').value; safeSync(); tg.showAlert('Антропометрия сохранена в ядро!'); }
 
-        // Таймер + Голосовой движок
         let timerTime = 60; let timerInterval;
         function updateTimerDisplay() { let m = Math.floor(timerTime / 60); let s = timerTime % 60; document.getElementById('timer').innerText = `0${m}:${s < 10 ? '0' : ''}${s}`; }
         function adjTimer(secs) { triggerVibration('light'); timerTime += secs; if(timerTime < 5) timerTime = 5; updateTimerDisplay(); }
         function setTimer(secs) { triggerVibration('light'); timerTime = secs; updateTimerDisplay(); }
-        
-        function startTimer() {
-            clearInterval(timerInterval); triggerVibration('medium');
-            timerInterval = setInterval(() => {
-                timerTime--; updateTimerDisplay();
-                if (timerTime <= 0) { 
-                    clearInterval(timerInterval); timerTime = 60; updateTimerDisplay(); 
-                    triggerVibration('heavy'); if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success'); 
-                    
-                    // Запуск голосового тренера!
-                    speakVoice("Время вышло! Следующий подход!"); 
-                    tg.showAlert('Время отдыха вышло! Пора за работу.'); 
-                }
-            }, 1000);
-        }
+        function startTimer() { clearInterval(timerInterval); triggerVibration('medium'); timerInterval = setInterval(() => { timerTime--; updateTimerDisplay(); if (timerTime <= 0) { clearInterval(timerInterval); timerTime = 60; updateTimerDisplay(); triggerVibration('heavy'); if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success'); speakVoice("Время вышло! Следующий подход!"); tg.showAlert('Время отдыха вышло! Пора за работу.'); } }, 1000); }
 
-        function renderHeatmap() {
-            let container = document.getElementById('heatmap'); container.innerHTML = '';
-            for(let i = 6; i >= 0; i--) {
-                let d = new Date(); d.setDate(d.getDate() - i);
-                let box = document.createElement('div');
-                box.className = `day-box ${appData.activityHistory.includes(d.toDateString()) ? 'active' : ''}`;
-                box.innerText = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()];
-                container.appendChild(box);
-            }
-        }
+        function renderHeatmap() { let container = document.getElementById('heatmap'); container.innerHTML = ''; for(let i = 6; i >= 0; i--) { let d = new Date(); d.setDate(d.getDate() - i); let box = document.createElement('div'); box.className = `day-box ${appData.activityHistory.includes(d.toDateString()) ? 'active' : ''}`; box.innerText = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()]; container.appendChild(box); } }
 
-        function saveWeight() {
-            let val = document.getElementById('weightInput').value; if(!val) return;
-            triggerVibration('heavy');
-            appData.weightLabels.push(`${new Date().getDate()}.${new Date().getMonth()+1}`);
-            appData.weightData.push(parseFloat(val));
-            if (appData.weightLabels.length > 10) { appData.weightLabels.shift(); appData.weightData.shift(); }
-            appData.lastWeightDate = todayStr;
-            addExp(10); initUI(); tg.showAlert('Вес зафиксирован!');
-        }
+        function saveWeight() { let val = document.getElementById('weightInput').value; if(!val) return; triggerVibration('heavy'); appData.weightLabels.push(`${new Date().getDate()}.${new Date().getMonth()+1}`); appData.weightData.push(parseFloat(val)); if (appData.weightLabels.length > 10) { appData.weightLabels.shift(); appData.weightData.shift(); } appData.lastWeightDate = todayStr; addExp(10); safeSync(); initUI(); tg.showAlert('Вес зафиксирован!'); }
 
-        function completeWorkout() {
-            triggerVibration('rigid'); appData.streak++;
-            if(!appData.activityHistory.includes(todayStr)) appData.activityHistory.push(todayStr);
-            appData.lastWorkoutDate = todayStr;
-            addExp(50); initUI(); updateCoach(); tg.showAlert('Силовая сессия закрыта! Прогресс отправлен в облако.');
+        function completeWorkout() { 
+            triggerVibration('rigid'); appData.streak++; 
+            if(!appData.activityHistory.includes(todayStr)) appData.activityHistory.push(todayStr); 
+            appData.notes = document.getElementById('workoutNotes').value;
+            appData.lastWorkoutDate = todayStr; 
+            addExp(50); safeSync(); initUI(); updateCoach(); tg.showAlert('Силовая сессия закрыта! Прогресс отправлен в облако.'); 
         }
 
         safeLoad();
