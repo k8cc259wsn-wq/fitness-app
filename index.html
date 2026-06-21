@@ -3,61 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fitness Tracker iOS Titanium</title>
+    <title>Fitness Tracker iOS Ultra</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg-black: #000000; --glass-bg: rgba(28, 28, 30, 0.65); --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff; --text-muted: rgba(255, 255, 255, 0.6);
-            --apple-green: #32d74b; --apple-blue: #0a84ff; --apple-orange: #ff9f0a; --apple-purple: #bf5af2;
-            --apple-red: #ff453a; --exp-color: #ffd60a;
+            --apple-green: #32d74b; --apple-red: #ff453a; --exp-color: #ffd60a;
+            /* Динамический акцент (по умолчанию синий) */
+            --accent: #0a84ff; --accent-glow: rgba(10, 132, 255, 0.4); --sub-accent: #bf5af2;
         }
 
         body { font-family: -apple-system, sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 20px 15px 50px 15px; overflow-x: hidden; }
 
-        .ambient-orb-1 { position: fixed; top: -50px; left: -50px; width: 250px; height: 250px; background: var(--apple-blue); border-radius: 50%; filter: blur(100px); opacity: 0.35; z-index: -1; }
-        .ambient-orb-2 { position: fixed; bottom: 50px; right: -50px; width: 300px; height: 300px; background: var(--apple-purple); border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: -1; }
+        .ambient-orb-1 { position: fixed; top: -50px; left: -50px; width: 250px; height: 250px; background: var(--accent); border-radius: 50%; filter: blur(100px); opacity: 0.35; z-index: -1; transition: 0.5s; }
+        .ambient-orb-2 { position: fixed; bottom: 50px; right: -50px; width: 300px; height: 300px; background: var(--sub-accent); border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: -1; transition: 0.5s; }
 
         .header { display: flex; flex-direction: column; gap: 5px; margin: 10px 0 20px 0; }
         .header-top { display: flex; justify-content: space-between; align-items: center; }
         .header h1 { margin: 0; font-size: 26px; font-weight: 800; }
-        .streak { background: rgba(255, 159, 10, 0.15); border: 1px solid rgba(255, 159, 10, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; color: var(--apple-orange); backdrop-filter: blur(10px); }
+        .streak { background: rgba(255, 159, 10, 0.15); border: 1px solid rgba(255, 159, 10, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; color: #ff9f0a; backdrop-filter: blur(10px); }
         
-        /* RPG Уровень */
-        .level-bar-container { background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; width: 100%; margin-top: 5px; overflow: hidden; position: relative; }
+        .level-bar-container { background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; width: 100%; margin-top: 5px; overflow: hidden; }
         .level-bar-fill { background: var(--exp-color); height: 100%; width: 0%; transition: 0.5s; box-shadow: 0 0 10px var(--exp-color); }
         .level-text { font-size: 12px; color: var(--exp-color); font-weight: bold; margin-top: 2px; }
 
         .card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 22px; padding: 18px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        /* ИИ Тренер */
-        .ai-coach { background: linear-gradient(135deg, rgba(191, 90, 242, 0.1) 0%, rgba(10, 132, 255, 0.1) 100%); border: 1px solid rgba(191, 90, 242, 0.3); border-radius: 16px; padding: 15px; margin-bottom: 15px; display: flex; gap: 12px; align-items: center; }
+        .ai-coach { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px; margin-bottom: 15px; display: flex; gap: 12px; align-items: center; }
         .ai-icon { font-size: 24px; animation: float 3s ease-in-out infinite; }
         .ai-text { font-size: 14px; line-height: 1.4; color: #e5e5ea; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
 
-        h2 { margin-top: 0; font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        h2 { margin-top: 0; font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        h2 span { display: flex; align-items: center; gap: 8px; }
+
         input[type="number"] { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-main); font-size: 16px; margin-bottom: 10px; }
+        input[type="number"]:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08); }
         .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
-        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #32d74b 0%, #28a745 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #32d74b 0%, #28a745 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(50,215,75,0.2); }
         button:active { transform: scale(0.97); }
-        button:disabled { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); cursor: not-allowed; }
-        .btn-blue { background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%); }
-        .btn-share { background: linear-gradient(135deg, #bf5af2 0%, #5e5ce6 100%); margin-top: 10px; }
+        button:disabled { background: rgba(255, 255, 255, 0.1) !important; color: var(--text-muted) !important; cursor: not-allowed; box-shadow: none; }
+        
+        .btn-accent { background: linear-gradient(135deg, var(--accent) 0%, rgba(0,0,0,0.5) 200%); box-shadow: 0 4px 15px var(--accent-glow); }
+        .btn-share { background: linear-gradient(135deg, #bf5af2 0%, #5e5ce6 100%); margin-top: 10px; box-shadow: none; }
 
         canvas { width: 100% !important; height: 180px !important; }
-        ul { padding-left: 20px; margin: 0 0 15px 0; color: var(--text-muted); }
-        li span { color: var(--text-main); font-weight: 500; }
+        
+        /* Интерактивный список тренировок */
+        ul.workout-checklist { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        ul.workout-checklist li { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        ul.workout-checklist li.done { border-color: var(--apple-green); background: rgba(50, 215, 75, 0.08); opacity: 0.7; }
+        ul.workout-checklist li input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--apple-green); cursor: pointer; }
 
         .heatmap-container { display: flex; justify-content: space-between; gap: 6px; }
         .day-box { flex: 1; aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: var(--text-muted); }
         .day-box.active { background: var(--apple-green); color: var(--bg-black); box-shadow: 0 0 10px rgba(50, 215, 75, 0.4); border: none; }
         
-        .timer-display { font-size: 42px; font-weight: 800; text-align: center; color: var(--apple-orange); font-variant-numeric: tabular-nums; margin: 5px 0; }
+        .timer-display { font-size: 42px; font-weight: 800; text-align: center; color: #ff9f0a; font-variant-numeric: tabular-nums; margin: 5px 0; }
         .timer-controls { display: flex; gap: 8px; margin-bottom: 15px; }
-        .timer-btn { background: rgba(255, 159, 10, 0.2); color: var(--apple-orange); padding: 8px; font-size: 13px; border-radius: 8px; flex: 1; text-align: center; font-weight: bold; }
+        .timer-btn { background: rgba(255, 159, 10, 0.15); color: #ff9f0a; padding: 8px; font-size: 13px; border-radius: 8px; flex: 1; text-align: center; font-weight: bold; border: 1px solid rgba(255,159,10,0.2); }
 
         .water-container { display: flex; justify-content: space-between; margin-top: 5px; }
         .water-drop { font-size: 24px; opacity: 0.3; transition: 0.3s; cursor: pointer; filter: grayscale(100%); }
@@ -70,92 +77,109 @@
         
         .c-cal { color: var(--apple-red); } .bg-cal { background: var(--apple-red); }
         .c-pro { color: var(--apple-green); } .bg-pro { background: var(--apple-green); }
-        .c-fat { color: var(--apple-orange); } .bg-fat { background: var(--apple-orange); }
-        .c-crb { color: var(--apple-blue); } .bg-crb { background: var(--apple-blue); }
+        .c-fat { color: #ff9f0a; } .bg-fat { background: #ff9f0a; }
+        .c-crb { color: #0a84ff; } .bg-crb { background: #0a84ff; }
+
+        /* Темы оформления */
+        .theme-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .theme-dot { flex: 1; height: 35px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        
+        .toggle-settings { font-size: 12px; color: var(--accent); cursor: pointer; text-decoration: underline; }
+        .hidden-settings { display: none; margin-top: 15px; border-top: 1px solid var(--glass-border); padding-top: 15px; }
 
         .cloud-status { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; margin-bottom: 20px;}
     </style>
 </head>
 <body>
 
-    <div class="ambient-orb-1"></div>
-    <div class="ambient-orb-2"></div>
+    <div class="ambient-orb-1" id="orb1"></div>
+    <div class="ambient-orb-2" id="orb2"></div>
 
     <div class="header">
         <div class="header-top">
-            <h1>Tracker PRO</h1>
+            <h1 id="appTitle">Tracker PRO</h1>
             <div class="streak" id="streakDisplay">🔥 0</div>
         </div>
-        <div class="level-text" id="levelText">Уровень 1: Новичок (0/100 EXP)</div>
+        <div class="level-text" id="levelText">Уровень 1 (0/100 EXP)</div>
         <div class="level-bar-container"><div class="level-bar-fill" id="levelBar"></div></div>
     </div>
 
     <div class="ai-coach">
         <div class="ai-icon">🧠</div>
-        <div class="ai-text" id="coachText">Анализирую твои данные...</div>
+        <div class="ai-text" id="coachText">Синхронизация нейропрофиля...</div>
     </div>
 
     <div class="card">
-        <h2>🗓 Тренировки</h2>
+        <h2><span>🎨 Стили и Матрица целей</span> <span class="toggle-settings" onclick="toggleSettings()">Настроить</span></h2>
+        <div class="theme-selector">
+            <div class="theme-dot" style="background:#0a84ff; color:white;" onclick="setTheme('blue')">Cyan</div>
+            <div class="theme-dot" style="background:#bf5af2; color:white;" onclick="setTheme('purple')">Pink</div>
+            <div class="theme-dot" style="background:#ff9f0a; color:black;" onclick="setTheme('gold')">Gold</div>
+            <div class="theme-dot" style="background:#32d74b; color:black;" onclick="setTheme('acid')">Acid</div>
+        </div>
+        
+        <div class="hidden-settings" id="settingsBlock">
+            <div class="input-row">
+                <input type="number" id="gWeight" placeholder="Цель вес (75)">
+                <input type="number" id="gWater" placeholder="Цель вода (8)">
+            </div>
+            <div class="input-row">
+                <input type="number" id="gCal" placeholder="Цель ккал (2500)">
+                <input type="number" id="gPro" placeholder="Цель белок (130)">
+            </div>
+            <button class="btn-accent" style="padding:10px;" onclick="saveCustomGoals()">Сохранить конфигурацию</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2><span>🗓 Сетка тренировок</span></h2>
         <div class="heatmap-container" id="heatmap"></div>
     </div>
 
     <div class="card">
-        <h2>💧 Вода (+5 EXP)</h2>
+        <h2><span>💧 Гидратация</span></h2>
         <div class="water-container" id="waterBox"></div>
     </div>
 
     <div class="card">
-        <h2>🥩 Питание (+15 EXP)</h2>
+        <h2><span>🥩 Нутриенты</span></h2>
         <div class="input-row">
             <input type="number" id="inpCal" placeholder="Ккал" inputmode="decimal">
-            <input type="number" id="inpPro" placeholder="Белок" inputmode="decimal">
+            <input type="number" id="inpPro" placeholder="Белок (г)" inputmode="decimal">
         </div>
         <div class="input-row">
-            <input type="number" id="inpFat" placeholder="Жиры" inputmode="decimal">
-            <input type="number" id="inpCrb" placeholder="Угли" inputmode="decimal">
+            <input type="number" id="inpFat" placeholder="Жиры (г)" inputmode="decimal">
+            <input type="number" id="inpCrb" placeholder="Углеводы (г)" inputmode="decimal">
         </div>
-        <button class="btn-blue" style="margin-bottom:15px; padding: 10px;" onclick="saveMacros()">Записать еду</button>
+        <button class="btn-accent" style="margin-bottom:15px;" onclick="saveMacros()">Записать прием пищи</button>
         
-        <div class="macro-box">
-            <div class="macro-header c-cal"><span>Калории</span><span id="txtCal">0 / 2500</span></div>
-            <div class="macro-bar-bg"><div class="macro-bar-fill bg-cal" id="barCal"></div></div>
-        </div>
-        <div class="macro-box">
-            <div class="macro-header c-pro"><span>Белок</span><span id="txtPro">0 / 130g</span></div>
-            <div class="macro-bar-bg"><div class="macro-bar-fill bg-pro" id="barPro"></div></div>
-        </div>
-        <div class="macro-box">
-            <div class="macro-header c-fat"><span>Жиры</span><span id="txtFat">0 / 80g</span></div>
-            <div class="macro-bar-bg"><div class="macro-bar-fill bg-fat" id="barFat"></div></div>
-        </div>
-        <div class="macro-box">
-            <div class="macro-header c-crb"><span>Углеводы</span><span id="txtCrb">0 / 300g</span></div>
-            <div class="macro-bar-bg"><div class="macro-bar-fill bg-crb" id="barCrb"></div></div>
-        </div>
+        <div class="macro-box"><div class="macro-header c-cal"><span>Калории</span><span id="txtCal">0/0</span></div><div class="macro-bar-bg"><div class="macro-bar-fill bg-cal" id="barCal"></div></div></div>
+        <div class="macro-box"><div class="macro-header c-pro"><span>Белок</span><span id="txtPro">0/0</span></div><div class="macro-bar-bg"><div class="macro-bar-fill bg-pro" id="barPro"></div></div></div>
+        <div class="macro-box"><div class="macro-header c-fat"><span>Жиры</span><span id="txtFat">0/0</span></div><div class="macro-bar-bg"><div class="macro-bar-fill bg-fat" id="barFat"></div></div></div>
+        <div class="macro-box"><div class="macro-header c-crb"><span>Углеводы</span><span id="txtCrb">0/0</span></div><div class="macro-bar-bg"><div class="macro-bar-fill bg-crb" id="barCrb"></div></div></div>
     </div>
 
     <div class="card">
-        <h2>⚖️ Вес (+10 EXP)</h2>
+        <h2><span>⚖️ Динамика массы</span></h2>
         <div class="input-row">
-            <input type="number" id="weightInput" placeholder="Текущий вес" step="0.1" inputmode="decimal">
-            <button id="weightBtn" class="btn-blue" style="width: 50%;" onclick="saveWeight()">Записать</button>
+            <input type="number" id="weightInput" placeholder="Вес сегодня" step="0.1" inputmode="decimal">
+            <button id="weightBtn" class="btn-accent" style="width: 45%;" onclick="saveWeight()">Записать</button>
         </div>
         <canvas id="weightChart"></canvas>
     </div>
 
     <div class="card">
-        <h2>📏 Замеры объемов</h2>
+        <h2><span>📏 Антропометрия</span></h2>
         <div class="input-row">
             <input type="number" id="inpBicep" placeholder="Бицепс" inputmode="decimal">
             <input type="number" id="inpChest" placeholder="Грудь" inputmode="decimal">
             <input type="number" id="inpWaist" placeholder="Талия" inputmode="decimal">
         </div>
-        <button class="btn-blue" style="padding: 10px;" onclick="saveMeasurements()">Сохранить замеры</button>
+        <button class="btn-accent" style="padding: 10px;" onclick="saveMeasurements()">Записать обхваты</button>
     </div>
 
     <div class="card">
-        <h2>⏱ Таймер отдыха</h2>
+        <h2><span>⏱ Квантовый таймер (с аудио)</span></h2>
         <div class="timer-display" id="timer">01:00</div>
         <div class="timer-controls">
             <div class="timer-btn" onclick="adjTimer(-15)">-15с</div>
@@ -163,18 +187,18 @@
             <div class="timer-btn" onclick="setTimer(30)">30с</div>
             <div class="timer-btn" onclick="setTimer(90)">90с</div>
         </div>
-        <button onclick="startTimer()" style="background: linear-gradient(135deg, #ff9f0a 0%, #d88300 100%);">Старт</button>
+        <button onclick="startTimer()" style="background: linear-gradient(135deg, #ff9f0a 0%, #d88300 100%); box-shadow:0 4px 15px rgba(255,159,10,0.3);">Старт</button>
     </div>
 
     <div class="card">
-        <h2>💪 Тренировка (+50 EXP)</h2>
-        <ul id="workoutPlan"></ul>
-        <button id="workoutBtn" onclick="completeWorkout()">Тренировка выполнена</button>
+        <h2><span>💪 Программа перегрузки</span></h2>
+        <ul class="workout-checklist" id="workoutPlan"></ul>
+        <button id="workoutBtn" onclick="completeWorkout()" disabled>Выполни все упражнения</button>
     </div>
 
-    <button class="btn-share" onclick="shareProgress()">📸 Поделиться прогрессом</button>
+    <button class="btn-share" onclick="shareProgress()">📸 Экспорт матрицы в буфер</button>
     
-    <div class="cloud-status" id="cloudStatus">📱 Загрузка...</div>
+    <div class="cloud-status" id="cloudStatus">📱 Кэш-инициализация...</div>
 
     <script>
         let tg = window.Telegram.WebApp;
@@ -183,21 +207,23 @@
         let todayStr = new Date().toDateString();
         function triggerVibration(style = 'medium') { if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(style); }
 
-        // Добавили exp в базу данных
+        // Добавили настройки целей и тему в структуру данных
         let appData = {
             streak: 0, exp: 0, weightData: [61.0], weightLabels: ['Старт'], activityHistory: [],
             lastWeightDate: '', lastWorkoutDate: '', lastResetDate: '',
-            water: 0, macros: { cal: 0, pro: 0, fat: 0, crb: 0 }, meas: { bicep: '', chest: '', waist: '' }
+            water: 0, macros: { cal: 0, pro: 0, fat: 0, crb: 0 }, meas: { bicep: '', chest: '', waist: '' },
+            goals: { weight: 75, water: 8, cal: 2500, pro: 130, fat: 80, crb: 300 },
+            theme: 'blue'
         };
 
         function safeLoad() {
             try {
-                let local = localStorage.getItem('fit_pro_safe');
-                if (local) appData = { ...appData, ...JSON.parse(local) }; // Merge чтобы не потерять новые ключи (exp)
+                let local = localStorage.getItem('fit_pro_v8');
+                if (local) appData = { ...appData, ...JSON.parse(local) }; 
                 
                 if (tg.CloudStorage && tg.CloudStorage.getItem) {
-                    tg.CloudStorage.getItem('fit_pro_safe', (err, val) => {
-                        if (!err && val) { appData = { ...appData, ...JSON.parse(val) }; document.getElementById('cloudStatus').innerHTML = '☁️ Данные синхронизированы'; } 
+                    tg.CloudStorage.getItem('fit_pro_v8', (err, val) => {
+                        if (!err && val) { appData = { ...appData, ...JSON.parse(val) }; document.getElementById('cloudStatus').innerHTML = '☁️ Матрица синхронизирована'; } 
                         finalizeLoad();
                     });
                 } else { finalizeLoad(); }
@@ -209,104 +235,197 @@
                 appData.water = 0; appData.macros = { cal: 0, pro: 0, fat: 0, crb: 0 };
                 appData.lastResetDate = todayStr; safeSync();
             }
+            // Рендерим настройки целей в инпуты
+            document.getElementById('gWeight').value = appData.goals.weight;
+            document.getElementById('gWater').value = appData.goals.water;
+            document.getElementById('gCal').value = appData.goals.cal;
+            document.getElementById('gPro').value = appData.goals.pro;
+            
+            applyTheme(appData.theme);
             initUI(); updateCoach();
         }
 
         function safeSync() {
             let dataStr = JSON.stringify(appData);
-            localStorage.setItem('fit_pro_safe', dataStr);
-            try { if (tg.CloudStorage && tg.CloudStorage.setItem) tg.CloudStorage.setItem('fit_pro_safe', dataStr, () => {}); } catch(e) {}
+            localStorage.setItem('fit_pro_v8', dataStr);
+            try { if (tg.CloudStorage && tg.CloudStorage.setItem) tg.CloudStorage.setItem('fit_pro_v8', dataStr, () => {}); } catch(e) {}
+        }
+
+        // Кастомизация тем
+        function setTheme(themeName) {
+            triggerVibration('light');
+            appData.theme = themeName;
+            safeSync();
+            applyTheme(themeName);
+            if(chart) initUI(); // Перерисовать график с новым цветом
+        }
+
+        function applyTheme(themeName) {
+            let root = document.documentElement;
+            if (themeName === 'blue') {
+                root.style.setProperty('--accent', '#0a84ff'); root.style.setProperty('--accent-glow', 'rgba(10, 132, 255, 0.4)'); root.style.setProperty('--sub-accent', '#bf5af2');
+                document.getElementById('appTitle').innerText = 'Tracker PRO • Cyan';
+            } else if (themeName === 'purple') {
+                root.style.setProperty('--accent', '#bf5af2'); root.style.setProperty('--accent-glow', 'rgba(191, 90, 242, 0.4)'); root.style.setProperty('--sub-accent', '#ff2d55');
+                document.getElementById('appTitle').innerText = 'Tracker PRO • Pink';
+            } else if (themeName === 'gold') {
+                root.style.setProperty('--accent', '#ff9f0a'); root.style.setProperty('--accent-glow', 'rgba(255, 159, 10, 0.4)'); root.style.setProperty('--sub-accent', '#ac8e68');
+                document.getElementById('appTitle').innerText = 'Tracker PRO • Gold';
+            } else if (themeName === 'acid') {
+                root.style.setProperty('--accent', '#32d74b'); root.style.setProperty('--accent-glow', 'rgba(50, 215, 75, 0.4)'); root.style.setProperty('--sub-accent', '#00f5ff');
+                document.getElementById('appTitle').innerText = 'Tracker PRO • Acid';
+            }
+        }
+
+        function toggleSettings() {
+            triggerVibration('light');
+            let block = document.getElementById('settingsBlock');
+            block.style.display = block.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function saveCustomGoals() {
+            triggerVibration('medium');
+            appData.goals.weight = parseFloat(document.getElementById('gWeight').value) || 75;
+            appData.goals.water = parseInt(document.getElementById('gWater').value) || 8;
+            appData.goals.cal = parseInt(document.getElementById('gCal').value) || 2500;
+            appData.goals.pro = parseInt(document.getElementById('gPro').value) || 130;
+            // Авторасчет жиров и углей пропорционально калориям
+            appData.goals.fat = Math.round((appData.goals.cal * 0.3) / 9);
+            appData.goals.crb = Math.round((appData.goals.cal * 0.5) / 4);
+            
+            safeSync(); initUI(); updateCoach();
+            toggleSettings();
+            tg.showAlert('Архитектура целей перестроена!');
+        }
+
+        // Голосовой движок Тренера
+        function speakVoice(text) {
+            try {
+                if ('speechSynthesis' in window) {
+                    let utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ru-RU';
+                    utterance.rate = 1.0; 
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch(e) {}
         }
 
         // RPG Система
-        const levelNames = ["Новичок", "Любитель", "Атлет", "Воин", "Титан", "Киборг", "Машина", "Полубог", "Бог Олимпа", "Мистер Олимпия"];
-        function addExp(amount) {
-            appData.exp += amount;
-            safeSync(); updateRPG();
-        }
-
+        const levelNames = ["Новичок", "Любитель", "Атлет", "Воин", "Титан", "Киборг", "Машина", "Полубог", "Олимпиец", "Альфа"];
+        function addExp(amount) { appData.exp += amount; safeSync(); updateRPG(); }
         function updateRPG() {
-            let level = Math.floor(appData.exp / 100) + 1;
-            let currentLevelExp = appData.exp % 100;
+            let level = Math.floor(appData.exp / 100) + 1; let currentLevelExp = appData.exp % 100;
             let title = levelNames[Math.min(level - 1, levelNames.length - 1)];
-            
             document.getElementById('levelText').innerText = `Уровень ${level}: ${title} (${currentLevelExp}/100 EXP)`;
             document.getElementById('levelBar').style.width = `${currentLevelExp}%`;
         }
 
-        // ИИ Тренер
+        // ИИ Аналитик
         function updateCoach() {
-            let coachMsg = "Отличный темп! Главное — стабильность. Идем к 75 кг!";
-            
-            if (appData.water < 4 && new Date().getHours() > 14) {
-                coachMsg = "Внимание: Ты пьешь мало воды! Мышцы состоят на 70% из воды, без неё они не растут.";
-            } else if (appData.macros.cal < 1000 && new Date().getHours() > 18) {
-                coachMsg = "Брат, ты в дефиците калорий. Так массу не набрать. Срочно съешь плотный ужин!";
-            } else if (appData.streak === 0) {
-                coachMsg = "Самое сложное — начать. Сделай хотя бы одну тренировку сегодня и запусти серию!";
-            } else if (appData.activityHistory.includes(todayStr) && appData.macros.cal >= 2000) {
-                coachMsg = "Идеальный день! Тренировка сделана, калории съедены. Ты растешь прямо сейчас во сне.";
+            let coachMsg = "Все системы в норме. Стабильно закрывай кольца для гипертрофии мыщц.";
+            if (appData.water < (appData.goals.water / 2) && new Date().getHours() > 15) {
+                coachMsg = "Критический уровень дегидратации. Выпей воды, иначе замедлишь синтез белка!";
+            } else if (appData.macros.cal < (appData.goals.cal / 2) && new Date().getHours() > 19) {
+                coachMsg = "Катаболическая угроза! Слишком мало калорий для роста массы. Срочно закинь углеводы.";
+            } else if (appData.streak > 0 && appData.streak % 7 === 0) {
+                coachMsg = `Стрик ${appData.streak} дней! Сработал триггер прогрессивной перегрузки: повторения увеличены!`;
             }
-
             document.getElementById('coachText').innerText = coachMsg;
         }
 
-        // Кнопка Поделиться
         function shareProgress() {
             triggerVibration('heavy');
             let level = Math.floor(appData.exp / 100) + 1;
             let currentWeight = appData.weightData[appData.weightData.length - 1];
-            
-            let reportText = `🏆 Мой фитнес-прогресс:\n\n⚖️ Вес: ${currentWeight} кг (Цель: 75 кг)\n🔥 Серия тренировок: ${appData.streak} дней\n⭐ Уровень: ${level}\n💧 Вода сегодня: ${appData.water}/8\n\nСтрою титановую форму через приложение-трекер! 🚀`;
-            
-            // Копируем в буфер
-            navigator.clipboard.writeText(reportText).then(() => {
-                tg.showAlert('Твой отчет скопирован в буфер обмена! Теперь ты можешь вставить его в любой чат другу или боту.');
-            }).catch(err => {
-                tg.showAlert('Отчет сгенерирован:\n\n' + reportText);
-            });
+            let reportText = `🏆 Квантовый фитнес-отчет:\n\n⚖️ Вес: ${currentWeight} кг (Цель: ${appData.goals.weight} кг)\n🔥 Стрик: ${appData.streak} дней\n⭐ Уровень: ${level}\n🍗 Калории: ${appData.macros.cal}/${appData.goals.cal} ккал\n💧 Вода: ${appData.water}/${appData.goals.water} стаканов\n\nМониторинг формы в Telegram на максимум! 🚀`;
+            navigator.clipboard.writeText(reportText).then(() => { tg.showAlert('Матрица отчета скопирована! Вставляй в любой чат.'); });
         }
 
         let chart;
         function initUI() {
             document.getElementById('streakDisplay').innerText = `🔥 ${appData.streak}`;
-            renderHeatmap(); renderWater(); renderMacros(); checkLocks(); updateRPG();
+            renderHeatmap(); renderWater(); renderMacros(); renderWorkoutChecklist(); checkLocks(); updateRPG();
 
             document.getElementById('inpBicep').value = appData.meas.bicep || '';
             document.getElementById('inpChest').value = appData.meas.chest || '';
             document.getElementById('inpWaist').value = appData.meas.waist || '';
 
             const ctx = document.getElementById('weightChart').getContext('2d');
+            let accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
             let gradient = ctx.createLinearGradient(0, 0, 0, 180);
-            gradient.addColorStop(0, 'rgba(10, 132, 255, 0.4)'); gradient.addColorStop(1, 'rgba(10, 132, 255, 0.0)');
+            gradient.addColorStop(0, accentColor + '66'); gradient.addColorStop(1, accentColor + '00');
             
             if(chart) chart.destroy();
             chart = new Chart(ctx, {
                 type: 'line', data: { labels: appData.weightLabels, datasets: [
-                    { label: 'Вес', data: appData.weightData, borderColor: '#0a84ff', backgroundColor: gradient, borderWidth: 3, pointBackgroundColor: '#fff', fill: true, tension: 0.4 },
-                    { label: 'Цель', data: Array(appData.weightLabels.length).fill(75), borderColor: '#32d74b', borderDash: [6,6], borderWidth: 2, fill: false }
+                    { label: 'Вес', data: appData.weightData, borderColor: accentColor, backgroundColor: gradient, borderWidth: 3, pointBackgroundColor: '#fff', fill: true, tension: 0.4 },
+                    { label: 'Цель', data: Array(appData.weightLabels.length).fill(appData.goals.weight), borderColor: '#32d74b', borderDash: [6,6], borderWidth: 2, fill: false }
                 ]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 60, max: 80 } } }
             });
-
-            let ul = document.getElementById('workoutPlan'); ul.innerHTML = '';
-            const bonusReps = Math.floor(appData.streak / 7) * 2;
-            const workouts = [
-                [{n: "Отжимания от пола", sets: 4, reps: 12}, {n: "Скручивания", sets: 3, reps: 20}, {n: "Приседания", sets: 4, reps: 20}],
-                [{n: "Подтягивания / Тяга", sets: 4, reps: 8}, {n: "Отжимания узким", sets: 3, reps: 12}, {n: "Выпады", sets: 3, reps: 15}]
-            ];
-            let currentDayPlan = new Date().getDay() % 3;
-            if (currentDayPlan === 2) { ul.innerHTML = "<li><span>День отдыха</span></li><li><span>Растяжка</span></li>"; } 
-            else { workouts[currentDayPlan].forEach(ex => { let li = document.createElement('li'); li.innerHTML = `<span>${ex.n}:</span> ${ex.sets}х${ex.reps + bonusReps}`; ul.appendChild(li); }); }
         }
 
         function checkLocks() {
             if (appData.lastWeightDate === todayStr) { let wBtn = document.getElementById('weightBtn'); wBtn.disabled = true; wBtn.innerText = '✓'; }
-            if (appData.lastWorkoutDate === todayStr) { let woBtn = document.getElementById('workoutBtn'); woBtn.disabled = true; woBtn.innerText = '✓ Выполнено'; }
+            if (appData.lastWorkoutDate === todayStr) { let woBtn = document.getElementById('workoutBtn'); woBtn.disabled = true; woBtn.innerText = '✓ Сессия закрыта'; }
+        }
+
+        // Интерактивный Чеклист упражнений
+        function renderWorkoutChecklist() {
+            let ul = document.getElementById('workoutPlan'); ul.innerHTML = '';
+            if (appData.lastWorkoutDate === todayStr) {
+                ul.innerHTML = "<li class='done'><span>Все задачи на сегодня решены! Отдыхай.</span></li>";
+                return;
+            }
+            
+            const bonusReps = Math.floor(appData.streak / 7) * 2;
+            const workouts = [
+                [{n: "Отжимания от пола", sets: 4, reps: 12}, {n: "Скручивания на пресс", sets: 3, reps: 20}, {n: "Приседания", sets: 4, reps: 20}],
+                [{n: "Подтягивания / Тяга", sets: 4, reps: 8}, {n: "Отжимания узким", sets: 3, reps: 12}, {n: "Выпады на ноги", sets: 3, reps: 15}]
+            ];
+            
+            let currentDayPlan = new Date().getDay() % 3;
+            if (currentDayPlan === 2) {
+                ul.innerHTML = "<li><span>Запланирован день восстановления</span></li><li><span>Сон + Профицит калорий</span></li>";
+                document.getElementById('workoutBtn').disabled = false;
+                document.getElementById('workoutBtn').innerText = "Активировать день отдыха";
+            } else {
+                workouts[currentDayPlan].forEach((ex, idx) => {
+                    let li = document.createElement('li');
+                    let totalReps = ex.reps + bonusReps;
+                    li.id = `ex-${idx}`;
+                    li.innerHTML = `<span><strong>${ex.n}:</strong> ${ex.sets}х${totalReps}</span> <input type="checkbox" onclick="toggleExercise(${idx})">`;
+                    ul.appendChild(li);
+                });
+                validateWorkoutButton();
+            }
+        }
+
+        function toggleExercise(idx) {
+            triggerVibration('light');
+            let li = document.getElementById(`ex-${idx}`);
+            li.classList.toggle('done');
+            validateWorkoutButton();
+        }
+
+        function validateWorkoutButton() {
+            if (appData.lastWorkoutDate === todayStr) return;
+            let total = document.querySelectorAll('.workout-checklist input[type="checkbox"]').length;
+            let checked = document.querySelectorAll('.workout-checklist input[type="checkbox"]:checked').length;
+            let btn = document.getElementById('workoutBtn');
+            
+            if (total > 0 && checked === total) {
+                btn.disabled = false;
+                btn.innerText = "Уничтожить тренировку (+50 EXP)";
+            } else if (total > 0) {
+                btn.disabled = true;
+                btn.innerText = `Выполнено: ${checked}/${total} упражнений`;
+            }
         }
 
         function renderWater() {
             let box = document.getElementById('waterBox'); box.innerHTML = '';
-            for(let i=1; i<=8; i++) {
+            let targetWater = appData.goals.water;
+            for(let i=1; i<=targetWater; i++) {
                 let d = document.createElement('div'); d.className = `water-drop ${i <= appData.water ? 'filled' : ''}`; d.innerText = '💧';
                 d.onclick = () => { triggerVibration('light'); appData.water = i; addExp(5); renderWater(); updateCoach(); };
                 box.appendChild(d);
@@ -323,19 +442,20 @@
         }
 
         function renderMacros() {
-            let m = appData.macros;
-            document.getElementById('txtCal').innerText = `${m.cal}/2500`; document.getElementById('barCal').style.width = `${Math.min((m.cal/2500)*100, 100)}%`;
-            document.getElementById('txtPro').innerText = `${m.pro}/130g`; document.getElementById('barPro').style.width = `${Math.min((m.pro/130)*100, 100)}%`;
-            document.getElementById('txtFat').innerText = `${m.fat}/80g`;  document.getElementById('barFat').style.width = `${Math.min((m.fat/80)*100, 100)}%`;
-            document.getElementById('txtCrb').innerText = `${m.crb}/300g`; document.getElementById('barCrb').style.width = `${Math.min((m.crb/300)*100, 100)}%`;
+            let m = appData.macros; let g = appData.goals;
+            document.getElementById('txtCal').innerText = `${m.cal}/${g.cal}`; document.getElementById('barCal').style.width = `${Math.min((m.cal/g.cal)*100, 100)}%`;
+            document.getElementById('txtPro').innerText = `${m.pro}/${g.pro}g`; document.getElementById('barPro').style.width = `${Math.min((m.pro/g.pro)*100, 100)}%`;
+            document.getElementById('txtFat').innerText = `${m.fat}/${g.fat}g`;  document.getElementById('barFat').style.width = `${Math.min((m.fat/g.fat)*100, 100)}%`;
+            document.getElementById('txtCrb').innerText = `${m.crb}/${g.crb}g`; document.getElementById('barCrb').style.width = `${Math.min((m.crb/g.crb)*100, 100)}%`;
         }
 
         function saveMeasurements() {
             triggerVibration('heavy');
             appData.meas.bicep = document.getElementById('inpBicep').value; appData.meas.chest = document.getElementById('inpChest').value; appData.meas.waist = document.getElementById('inpWaist').value;
-            safeSync(); tg.showAlert('Замеры сохранены!');
+            safeSync(); tg.showAlert('Антропометрия сохранена в ядро!');
         }
 
+        // Таймер + Голосовой движок
         let timerTime = 60; let timerInterval;
         function updateTimerDisplay() { let m = Math.floor(timerTime / 60); let s = timerTime % 60; document.getElementById('timer').innerText = `0${m}:${s < 10 ? '0' : ''}${s}`; }
         function adjTimer(secs) { triggerVibration('light'); timerTime += secs; if(timerTime < 5) timerTime = 5; updateTimerDisplay(); }
@@ -345,7 +465,14 @@
             clearInterval(timerInterval); triggerVibration('medium');
             timerInterval = setInterval(() => {
                 timerTime--; updateTimerDisplay();
-                if (timerTime <= 0) { clearInterval(timerInterval); timerTime = 60; updateTimerDisplay(); triggerVibration('heavy'); if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success'); tg.showAlert('Подход! Погнали!'); }
+                if (timerTime <= 0) { 
+                    clearInterval(timerInterval); timerTime = 60; updateTimerDisplay(); 
+                    triggerVibration('heavy'); if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success'); 
+                    
+                    // Запуск голосового тренера!
+                    speakVoice("Время вышло! Следующий подход!"); 
+                    tg.showAlert('Время отдыха вышло! Пора за работу.'); 
+                }
             }, 1000);
         }
 
@@ -374,7 +501,7 @@
             triggerVibration('rigid'); appData.streak++;
             if(!appData.activityHistory.includes(todayStr)) appData.activityHistory.push(todayStr);
             appData.lastWorkoutDate = todayStr;
-            addExp(50); initUI(); updateCoach(); tg.showAlert('Машина! Тренировка засчитана (+50 EXP).');
+            addExp(50); initUI(); updateCoach(); tg.showAlert('Силовая сессия закрыта! Прогресс отправлен в облако.');
         }
 
         safeLoad();
